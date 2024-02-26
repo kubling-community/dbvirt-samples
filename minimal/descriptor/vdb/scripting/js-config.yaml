@@ -5,4 +5,5 @@ modules:
   - priorityResolution: 1
     # Location (URI) of the Bundle module Zip File.
     # Supports http(s) with credentials in the form of https://[username[:password]@]hostname[:port][absolute-path]
-    zipFilePath: ''
+    # You can keep using this env var or just replace the value by the location
+    zipFilePath: "{{ MODULE_BUNDLE }}"
