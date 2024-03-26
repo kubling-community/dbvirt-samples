@@ -21,7 +21,7 @@ tells the engine where to find the VDB Bundle file.
 In our case, we will point to the file generated in the first step, called `minimal-descriptor-bundle.zip`.
 Here you can opt for specifying the URI or keeping the variable `DESCRIPTOR_BUNDLE` which must be passed to the container.
 
-### 5. Run container
+### 4. Run container
 This sample works well with our Community Edition, just replace the environment variables and run:
 
 ```
