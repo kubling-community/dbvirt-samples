@@ -39,7 +39,7 @@ fetched from, for example, Kubernetes on-prem, AKS and Docker containers running
 | appmodel (WIP)    | This is the most advanced example in which we build a Data Model for a company that has multiple applications and wants to create provisioning workflows and abstract developers from the underlying system's complexity. |
 
 ### Organization of each sample
-| Directory/File  | Goal                                                                                                                                                                                |
+| Directory/File  |                                                                                                                                                                                     |
 |:----------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | descriptor      | Contains the main bundle that will be loaded during engine initialization.                                                                                                          |
 | modules         | Contains the JavaScript modules the descriptor specifies                                                                                                                            |
