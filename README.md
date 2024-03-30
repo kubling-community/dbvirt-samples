@@ -8,13 +8,14 @@ DBVirt follows CI/CD and DevOps principles, that is, the engine loads definition
 in turn, can define other dependencies as JavaScript modules.
 
 ## Organization of the samples
-| Directory           | Goal                                                                                                                                                                                                                      |
-|:--------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| minimal             | A really simple example in which we create a Virtual Database with a single virtual entity.                                                                                                                               |
-| authorization (WIP) | Similar to the minimal example but with a really small custom authorization script.                                                                                                                                       |
-| initializer (WIP)   | Explores how to use initialization script and scheduler                                                                                                                                                                   |
-| azure (WIP)         | A ConfigMap example for those creating `DBVirt` instances from the Azure Marketplace.                                                                                                                                     |
-| appmodel (WIP)      | This is the most advanced example in which we build a Data Model for a company that has multiple applications and wants to create provisioning workflows and abstract developers from the underlying system's complexity. |
+| Directory         | Goal                                                                                                                                                                                                                      |
+|:------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| minimal           | A really simple example in which we create a Virtual Database with a single virtual entity.                                                                                                                               |
+| RBAC              | Similar to the minimal example but with a really small custom authentication/authorization script.                                                                                                                        |
+| initializer (WIP) | Explores how to use initialization script and scheduler                                                                                                                                                                   |
+| endpoints (WIP)   | In this sample we will expose some endpoints to chain operations (actions) and to query data                                                                                                                              |
+| azure (WIP)       | A ConfigMap example for those creating `DBVirt` instances from the Azure Marketplace.                                                                                                                                     |
+| appmodel (WIP)    | This is the most advanced example in which we build a Data Model for a company that has multiple applications and wants to create provisioning workflows and abstract developers from the underlying system's complexity. |
 
 ### Organization of each sample
 | Directory/File  | Goal                                                                                                                                                                                |

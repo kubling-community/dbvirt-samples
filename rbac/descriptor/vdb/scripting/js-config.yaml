@@ -1,0 +1,3 @@
+modules:
+  - priorityResolution: 1
+    zipFilePath: "{{ MODULE_BUNDLE }}"

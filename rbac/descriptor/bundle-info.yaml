@@ -1,0 +1,4 @@
+virtualDatabases:
+  - 'vdb/ApplicationVDB.yaml'
+authentication:
+  scriptFilePath: "auth/authenticator.js"

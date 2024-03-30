@@ -1,0 +1,51 @@
+---
+name: "Application"
+version: "1"
+
+dataSourceModels:
+  - name: "app_ds"
+    dataSourceType: "SCRIPT_JS"
+    config: "bundle:scripting/js-config.yaml"
+
+translatorModels:
+  - name: "js_translator"
+    dataSourceType: "SCRIPT_JS"
+    config: "bundle:translator/js-translator.yaml"
+
+schemaModels:
+  - name: "app"
+    type: "PHYSICAL"
+    dataMappings:
+      js_translator: "app_ds"
+    ddl: |      
+      CREATE FOREIGN TABLE KUBLING_DEPLOYMENT
+                (name string primary key, readiness string, state string, age integer, replicas integer, message string)
+            OPTIONS(updatable true);
+      CREATE FOREIGN TABLE NESTED_OBJECT (my__field string, my__nested_field string) OPTIONS(updatable true);
+
+rbacDataRoles:
+  - name: "full_control"
+    description: "RBAC with full control"
+    allowCreateTemporaryTables: true
+    roleNameMappings:
+      - "ROLE_FULL"
+    permissions:
+      - resource: "app.KUBLING_DEPLOYMENT"
+        resourceType: TABLE
+        allowCreate: true
+        allowRead: true
+        allowUpdate: true
+        allowDelete: true
+
+  - name: "only_read"
+    description: "RBAC with only read access"
+    allowCreateTemporaryTables: true
+    roleNameMappings:
+      - "ROLE_ONLY_READ"
+    permissions:
+      - resource: "app.KUBLING_DEPLOYMENT"
+        resourceType: TABLE
+        allowCreate: false
+        allowRead: true
+        allowUpdate: false
+        allowDelete: false
