@@ -7,6 +7,27 @@ Kubling Data Source Virtualization (or DBVirt) is a virtual-schemafull database 
 DBVirt follows CI/CD and DevOps principles, that is, the engine loads definition and configurations dynamically from a released bundle file which,
 in turn, can define other dependencies as JavaScript modules.
 
+## Motivation
+While working on a platform for containerized workloads, we realized that the proliferation of tools would bring a lot of complexity to our platform's model
+if we wanted to support them all.
+<br/>
+One of the first challenges we encountered is that those tools name things differently, even though most of them are based originally in Kubernetes.
+That lead us to start designing an abstraction layer which also involves a minimal definition of certain common concepts, like `DEPLOYMENT` or `STORAGE VOLUME`.
+
+
+Conclusion was interesting: we found out that the intersection of definitions from multiple tools is a set a common properties that, fortunately, represent
+the dynamic part of the workload scheduling process and resource creation, whereas the tool-specific parts were mostly associated to properties defined in provisioning scripts
+which are occasionally changed.
+<br/>
+That was good news because minimizing the definition of `DEPLOYMENT` would imply the loss of flexibility and could compromise the adaptability when providing services
+to teams that require capacity for running workloads.
+
+Kubling DBVirt then acts as a fully-consistent CRUD translation layer, allowing to define "simplified" entities whose meaning should not be associated to any specific implementation, with the
+ability to deal with any tool's complexity using custom JavaScript code.
+Besides, those minimized entities could be the result of a combination of other entities, that is, when querying `DEPLOYMENT`s the result we see is an aggregation of deployments
+fetched from, for example, Kubernetes on-prem, AKS and Docker containers running in VMs.
+
+
 ## Organization of the samples
 | Directory         | Goal                                                                                                                                                                                                                      |
 |:------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
