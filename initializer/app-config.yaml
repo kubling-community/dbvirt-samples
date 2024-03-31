@@ -1,0 +1,6 @@
+transports:
+  pgProtocol:
+    bindAddress: "0.0.0.0"
+    portNumber: 35432
+vdb:
+  descriptorBundle: {{ DESCRIPTOR_BUNDLE }}

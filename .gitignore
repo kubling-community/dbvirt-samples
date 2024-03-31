@@ -2,3 +2,5 @@
 /minimal/modules/main-module-bundle.zip
 /minimal/minimal-descriptor-bundle.zip
 /rbac/rbac-descriptor-bundle.zip
+/initializer/initializer-descriptor-bundle.zip
+/initializer/modules/tokenbased-module-bundle.zip

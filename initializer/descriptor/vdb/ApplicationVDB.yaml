@@ -1,0 +1,23 @@
+---
+name: "DB"
+version: "1"
+
+dataSourceModels:
+  - name: "tk_ds"
+    dataSourceType: "SCRIPT_JS"
+    config: "bundle:scripting/js-config.yaml"
+
+translatorModels:
+  - name: "js_translator"
+    dataSourceType: "SCRIPT_JS"
+    config: "bundle:translator/js-translator.yaml"
+
+schemaModels:
+  - name: "tk"
+    type: "PHYSICAL"
+    dataMappings:
+      js_translator: "tk_ds"
+    ddl: |
+      CREATE FOREIGN TABLE MY_TOKEN
+                (token__inmem string, token__decrypted string)
+            OPTIONS(updatable false);
