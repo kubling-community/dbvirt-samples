@@ -1,0 +1,10 @@
+supportsCompareCriteriaEquals: true
+supportsInCriteria: true
+supportsLikeCriteria: false
+supportsOrCriteria: true
+supportsRowLimit: true
+supportsRowOffset: true
+supportsNotCriteria: true
+supportsOnlyLiteralComparison: true
+supportsLikeCriteriaEscapeCharacter: true
+useAnsiJoin: true
