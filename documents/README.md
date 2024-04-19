@@ -61,7 +61,7 @@ Directives are passed as `OPTIONS` which are lists of key-value pairs. List of s
 | `synthetic_type`              | field  | String  | `parent`, `parent_array_key` | Type of synthetic field.<br/>`parent` indicates that exists in and is connected to the parent entity.<br/>`parent_array_key` indicates that the field is used to locate specific elements within `synthetic_path` |
 | `synthetic_parent_field`      | field  | String  | Any                          | Indicates that the related parent field name is not the same as defined in the synthetic entity field. Used mostly when field names overlap.                                                                      |
 
-Please see [this diagram](../diagrams/synthetic_directives.graphml)
+Please see [this diagram](../diagrams/synthetic_directives.svg)
 
 A non-synthetic-related directive worth mentioning:
 
@@ -92,9 +92,8 @@ This sample works well with our Community Edition, just replace the environment 
 
 ```
 docker run --rm \ 
-    -e DESCRIPTOR_BUNDLE=[/path/to/minimal-descriptor-bundle.zip] \
+    -e DESCRIPTOR_BUNDLE=[/path/to/documents-descriptor-bundle.zip] \
     -e APP_CONFIG=[/path/to/app-config.yaml] \
-    -e MODULE_BUNDLE=[/path/to/main-module-bundle.zip] \
     -p 35432:35432 -p 8282:8282 \
     -v [/path/to/dbvirt-samples]:[mount/path] \
     kubling/dbvirt-ce:latest
@@ -103,9 +102,8 @@ docker run --rm \
 Or, assuming that you cloned the repo in `~/dbvirt-samples`, just run:
 ```
 docker run --rm \
-    -e DESCRIPTOR_BUNDLE=/dbvirt-samples/minimal/minimal-descriptor-bundle.zip \
-    -e APP_CONFIG=/dbvirt-samples/minimal/app-config.yaml \
-    -e MODULE_BUNDLE=/dbvirt-samples/minimal/modules/main-module-bundle.zip \
+    -e DESCRIPTOR_BUNDLE=/dbvirt-samples/documents/documents-descriptor-bundle.zip \
+    -e APP_CONFIG=/dbvirt-samples/documents/app-config.yaml \
     -p 35432:35432 -p 8282:8282 \
     -v ~/dbvirt-samples:/dbvirt-samples \
     kubling/dbvirt-ce:latest
@@ -115,10 +113,29 @@ docker run --rm \
 Once the container is running, run `psql -h localhost -p 35432 -U sa -d application` in a terminal. Type any password,
 we are not authenticating users in the example.
 Some queries you can start with:
-* `SELECT * from KUBLING_DEPLOYMENT;`
-* `SELECT * from KUBLING_DEPLOYMENT WHERE name = 'some' AND age > 60;`
-* `SELECT name from KUBLING_DEPLOYMENT ORDER BY name DESC LIMIT 10 offset 20;`
-* `INSERT INTO KUBLING_DEPLOYMENT (name) VALUES ('my_name');`
-* `DELETE FROM KUBLING_DEPLOYMENT WHERE name = 'my_name';`
+* `SELECT * FROM embed.DEPLOYMENT WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8';`<br/><br/>
+* `SELECT * FROM synthetic.DEPLOYMENT_CONTAINER WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8';`<br/><br/>
+* `SELECT * FROM synthetic.DEPLOYMENT_CONTAINER WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8' and metadata__name = 'nginx';`<br/><br/>
+* `SELECT * FROM synthetic.DEPLOYMENT_CONTAINER_VOLS WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8';`<br/><br/>
+* `SELECT * FROM synthetic.DEPLOYMENT_CONTAINER_VOLS WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8' and containerName = '1-nginx';`<br/><br/>
+* `INSERT INTO synthetic.DEPLOYMENT_CONTAINER
+  (metadata__name, metadata__namespace, image, name)
+  VALUES('nginx', '08abb0fc-f7af-4fe8-98d4-e76729567dc8', 'kubling.artifactory.internal/kubling-attached-nfs-server:23.5', 'nfs-server');`<br/><br/>
+* `UPDATE synthetic.DEPLOYMENT_CONTAINER
+  SET image='kubling.artifactory.internal/kubling-attached-nfs-server:23.7'
+  WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8' and metadata__name = 'nginx';`<br/><br/>
+* `UPDATE synthetic.DEPLOYMENT_CONTAINER
+  SET image='kubling.artifactory.internal/kubling-attached-nfs-server:23.7'
+  WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8' and metadata__name = 'nginx' and name = '2-nginx';`<br/><br/>
+* `INSERT INTO synthetic.DEPLOYMENT_CONTAINER_VOLS
+  (metadata__name, metadata__namespace, containerName, mountPath, name, readOnly)
+  VALUES('nginx', '08abb0fc-f7af-4fe8-98d4-e76729567dc8', '1-nginx', '/my/mnt', 'conf1-m0zhgq3', false);`<br/><br/>
+* `UPDATE synthetic.DEPLOYMENT_CONTAINER_VOLS SET mountPath = '/my/mnt2'
+  WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8' and metadata__name = 'nginx';`<br/><br/>
+* `UPDATE synthetic.DEPLOYMENT_CONTAINER_VOLS SET mountPath = '/my/mnt2'
+  WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8' and metadata__name = 'nginx' and (containerName = '1-nginx' or containerName = '2-nginx');`<br/><br/>
+* `UPDATE synthetic.DEPLOYMENT_CONTAINER_VOLS SET mountPath = '/my/mnt2'
+  WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8' and metadata__name = 'nginx' and containerName
+  in (SELECT containerName FROM synthetic.DEPLOYMENT_CONTAINER_VOLS WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8');`<br/><br/>
 
 Each query will print out the received context object and won't save or delete any information.   
