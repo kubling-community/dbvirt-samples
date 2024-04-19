@@ -94,6 +94,8 @@ This sample works well with our Community Edition, just replace the environment 
 docker run --rm \ 
     -e DESCRIPTOR_BUNDLE=[/path/to/documents-descriptor-bundle.zip] \
     -e APP_CONFIG=[/path/to/app-config.yaml] \
+    -e KUBERNETES_PORT=[8443] \
+    -e KUBERNETES_HOST=[localhost] \
     -p 35432:35432 -p 8282:8282 \
     -v [/path/to/dbvirt-samples]:[mount/path] \
     kubling/dbvirt-ce:latest
@@ -104,6 +106,8 @@ Or, assuming that you cloned the repo in `~/dbvirt-samples`, just run:
 docker run --rm \
     -e DESCRIPTOR_BUNDLE=/dbvirt-samples/documents/documents-descriptor-bundle.zip \
     -e APP_CONFIG=/dbvirt-samples/documents/app-config.yaml \
+    -e KUBERNETES_PORT=8443 \
+    -e KUBERNETES_HOST=localhost \
     -p 35432:35432 -p 8282:8282 \
     -v ~/dbvirt-samples:/dbvirt-samples \
     kubling/dbvirt-ce:latest
