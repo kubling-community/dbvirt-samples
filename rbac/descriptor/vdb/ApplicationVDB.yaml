@@ -5,12 +5,12 @@ version: "1"
 dataSourceModels:
   - name: "app_ds"
     dataSourceType: "SCRIPT_JS"
-    config: "bundle:scripting/k8s-config.yaml"
+    config: "bundle:scripting/js-config.yaml"
 
 translatorModels:
   - name: "js_translator"
     dataSourceType: "SCRIPT_JS"
-    config: "bundle:translator/k8s-translator.yaml"
+    config: "bundle:translator/js-translator.yaml"
 
 schemaModels:
   - name: "app"

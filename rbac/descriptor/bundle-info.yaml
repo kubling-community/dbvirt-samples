@@ -1,4 +1,4 @@
 virtualDatabases:
-  - 'vdb/KubernetesVDB.yaml'
+  - 'vdb/ApplicationVDB.yaml'
 authentication:
   scriptFilePath: "auth/authenticator.js"

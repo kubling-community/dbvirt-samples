@@ -11,13 +11,13 @@ dataSourceModels:
   - name: "app_ds"
     dataSourceType: "SCRIPT_JS"
     # 'bundle:' scheme indicates that the resource is in this bundle file and is relative to this vdb config directory!
-    config: "bundle:scripting/k8s-config.yaml"
+    config: "bundle:scripting/js-config.yaml"
 
 # Translators define the allowed behaviour of operations on entities. Please see translator config file.
 translatorModels:
   - name: "js_translator"
     dataSourceType: "SCRIPT_JS"
-    config: "bundle:translator/k8s-translator.yaml"
+    config: "bundle:translator/js-translator.yaml"
 
 schemaModels:
   - name: "app"

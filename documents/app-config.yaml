@@ -8,3 +8,7 @@ transports:
     portNumber: 35432
 vdb:
   descriptorBundle: {{ DESCRIPTOR_BUNDLE }}
+
+# Allows to specify an additional properties file path, useful when working in a Kubernetes environment with env vars
+# specified in a ConfigMap rather than listing in the spec
+propertiesFilePath: {{ PROPS_FILE }}

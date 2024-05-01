@@ -1,6 +1,6 @@
 supportsCompareCriteriaEquals: true
 supportsInCriteria: true
-supportsLikeCriteria: false
+supportsLikeCriteria: true
 supportsOrCriteria: true
 supportsRowLimit: true
 supportsRowOffset: true

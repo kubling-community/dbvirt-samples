@@ -70,6 +70,78 @@ A non-synthetic-related directive worth mentioning:
 | `supports_idempotency` | entity | Boolean | True/False | Indicates whether the upstream API supports idempotency.<br/>When `false` the engine verifies whether the operation changed the original record/document before applying.<br/>If omitted, the default value is `true` |
 
 
+## `SCRIPT_DOCUMENT_JS` data source type
+The most important feature of this sample we would like you to explore, is what DBVirt offers in terms of abstracting the
+complexity of dealing with documents (mostly Json and YAML).<br/>
+`SCRIPT_DOCUMENT_JS` is a `dataSourceType` which indicates the engine that some pre-work must be done on queries in case
+of they are performed over synthetic entities.
+
+In order to simplify it, engine makes two internal operations called group and ungroup, that is, when querying a synthetic
+entity, DBVirt walks through its lineage up to the first non-synthetic entity, then it calls the `resultset` JavaScript
+delegate and goes back again to the lineage making the ungroup operation based on `synthetic_path` value.
+
+As you can see, from the `resultset` standpoint of view, your JavaScript works as the regular `SCRIPT_JS` delegation.
+
+We use the term lineage since synthetic entity can have another synthetic entity as parent, as shown in this sample (`DEPLOYMENT_CONTAINER_VOLS` entity)
+
+However, `INSERT`, `UPDATE` and `DELETE` operations work differently on synthetic entities, as follows:
+
+Operation objects injected in the JS context has members and functions that make it easier to identify what is received.
+
+### INSERT
+An `INSERT` on a synthetic entity means that a new element in the parent `synthetic_path` array must be added.
+The engine will create a new element based on fields values that **do not have any associated `synthetic_type`** which in turn
+will be used to walk through the lineage and identify the node of the document where to insert the element.
+
+#### `insertOperation` context object
+
+| Member/Func      | Type               | Description                                           |
+|------------------|--------------------|-------------------------------------------------------|
+| table            | String             | Parent non-synthetic table name                       |
+| fieldValues      | List<SetOperation> | List of field/value pairs enumerated in the operation |
+| jsonList         | List<String>       | List of Documents to be inserted in Json format.      |
+| yamlList         | List               | List of Documents to be inserted in YAML format.      |
+
+Please note that `jsonList` and `yamlList` return a Document created based on `fieldValues`, which in some cases is not
+the final document and some construction is necessary in the script.
+
+### UPDATE
+Similar to `INSERT` but instead of adding a new element (node), values defined in the `SET` section will be used to replace on
+an existing node.
+
+#### `updateOperation` context object
+
+| Member/Func       | Type                  | Description                                                                                                                                                                        |
+|-------------------|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| table             | String                | Parent non-synthetic table name                                                                                                                                                    |
+| updates           | List<SetOperation>    | List of field/value pairs enumerated in the operation                                                                                                                              |
+| queryFilter       | QueryFilter           | Information of filters, sort and pagination.                                                                                                                                       |
+| jsonList          | List<String>          | List of Documents to be inserted in Json format.                                                                                                                                   |
+| yamlList          | List<String>          | List of Documents to be inserted in YAML format.                                                                                                                                   |
+| originalJsonList  | List<String>          | The document BEFORE changes as returned by the resultset script.                                                                                                                   |
+| originalYamlList  | List<String>          | Same as originalJsonList but in YAML format.                                                                                                                                       |
+| differences       | JsonDifferenceResult  | Indicates the changes made to the original document, in an much more code-friendly format, by computing a delta operation between each pair. Please see code sample for more info. |
+
+### DELETE
+Same as `INSERT` but, once the node identified, it is removed from the document.
+
+#### `deleteOperation` context object
+
+| Member/Func      | Type         | Description                                      |
+|------------------|--------------|--------------------------------------------------|
+| table            | String       | Parent non-synthetic table name                  |
+| queryFilter      | QueryFilter  | Information of filters, sort and pagination.     |
+| jsonList         | List<String> | List of Documents to be inserted in Json format. |
+| yamlList         | List         | List of Documents to be inserted in YAML format. |
+
+## JavaScript side
+What scripts receive when working with Documents is slightly different from delegation scripts. Operations performed on
+synthetic entity receive _full documents_ instead of only a portion.
+
+_Full document_ means the one returned by `resultset` script which is always called when `INSERT`, `UPDATE` and `DELETE`
+on synthetics are performed as explained earlier.
+
+Please explore [samples code](modules/doc/action) to see a general idea of how it works.
 
 ## How to test it
 
@@ -93,9 +165,9 @@ This sample works well with our Community Edition, just replace the environment 
 ```
 docker run --rm \ 
     -e DESCRIPTOR_BUNDLE=[/path/to/documents-descriptor-bundle.zip] \
+    -e MODULE_BUNDLE=[/path/to/documents-module-bundle.zip] \
     -e APP_CONFIG=[/path/to/app-config.yaml] \
-    -e KUBERNETES_PORT=[8443] \
-    -e KUBERNETES_HOST=[localhost] \
+    -e PROPS_FILE=[/path/to/env.properties] \
     -p 35432:35432 -p 8282:8282 \
     -v [/path/to/dbvirt-samples]:[mount/path] \
     kubling/dbvirt-ce:latest
@@ -105,9 +177,9 @@ Or, assuming that you cloned the repo in `~/dbvirt-samples`, just run:
 ```
 docker run --rm \
     -e DESCRIPTOR_BUNDLE=/dbvirt-samples/documents/documents-descriptor-bundle.zip \
+    -e MODULE_BUNDLE=/dbvirt-samples/documents/modules/documents-modules-bundle.zip \
     -e APP_CONFIG=/dbvirt-samples/documents/app-config.yaml \
-    -e KUBERNETES_PORT=8443 \
-    -e KUBERNETES_HOST=localhost \
+    -e PROPS_FILE=/dbvirt-samples/documents/env.properties \
     -p 35432:35432 -p 8282:8282 \
     -v ~/dbvirt-samples:/dbvirt-samples \
     kubling/dbvirt-ce:latest
@@ -117,29 +189,27 @@ docker run --rm \
 Once the container is running, run `psql -h localhost -p 35432 -U sa -d application` in a terminal. Type any password,
 we are not authenticating users in the example.
 Some queries you can start with:
-* `SELECT * FROM embed.DEPLOYMENT WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8';`<br/><br/>
-* `SELECT * FROM synthetic.DEPLOYMENT_CONTAINER WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8';`<br/><br/>
-* `SELECT * FROM synthetic.DEPLOYMENT_CONTAINER WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8' and metadata__name = 'nginx';`<br/><br/>
-* `SELECT * FROM synthetic.DEPLOYMENT_CONTAINER_VOLS WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8';`<br/><br/>
-* `SELECT * FROM synthetic.DEPLOYMENT_CONTAINER_VOLS WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8' and containerName = '1-nginx';`<br/><br/>
-* `INSERT INTO synthetic.DEPLOYMENT_CONTAINER
+* `SELECT * FROM DEPLOYMENT WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8';`<br/><br/>
+* `SELECT * FROM k8s.DEPLOYMENT_CONTAINER WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8';`<br/><br/>
+* `SELECT * FROM k8s.DEPLOYMENT_CONTAINER WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8' and metadata__name = 'nginx';`<br/><br/>
+* `SELECT * FROM k8s.DEPLOYMENT_CONTAINER_VOLS WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8';`<br/><br/>
+* `SELECT * FROM k8s.DEPLOYMENT_CONTAINER_VOLS WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8' and containerName = '1-nginx';`<br/><br/>
+* `INSERT INTO k8s.DEPLOYMENT_CONTAINER
   (metadata__name, metadata__namespace, image, name)
   VALUES('nginx', '08abb0fc-f7af-4fe8-98d4-e76729567dc8', 'kubling.artifactory.internal/kubling-attached-nfs-server:23.5', 'nfs-server');`<br/><br/>
-* `UPDATE synthetic.DEPLOYMENT_CONTAINER
+* `UPDATE k8s.DEPLOYMENT_CONTAINER
   SET image='kubling.artifactory.internal/kubling-attached-nfs-server:23.7'
   WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8' and metadata__name = 'nginx';`<br/><br/>
-* `UPDATE synthetic.DEPLOYMENT_CONTAINER
+* `UPDATE k8s.DEPLOYMENT_CONTAINER
   SET image='kubling.artifactory.internal/kubling-attached-nfs-server:23.7'
   WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8' and metadata__name = 'nginx' and name = '2-nginx';`<br/><br/>
-* `INSERT INTO synthetic.DEPLOYMENT_CONTAINER_VOLS
+* `INSERT INTO k8s.DEPLOYMENT_CONTAINER_VOLS
   (metadata__name, metadata__namespace, containerName, mountPath, name, readOnly)
   VALUES('nginx', '08abb0fc-f7af-4fe8-98d4-e76729567dc8', '1-nginx', '/my/mnt', 'conf1-m0zhgq3', false);`<br/><br/>
-* `UPDATE synthetic.DEPLOYMENT_CONTAINER_VOLS SET mountPath = '/my/mnt2'
+* `UPDATE k8s.DEPLOYMENT_CONTAINER_VOLS SET mountPath = '/my/mnt2'
   WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8' and metadata__name = 'nginx';`<br/><br/>
-* `UPDATE synthetic.DEPLOYMENT_CONTAINER_VOLS SET mountPath = '/my/mnt2'
+* `UPDATE k8s.DEPLOYMENT_CONTAINER_VOLS SET mountPath = '/my/mnt2'
   WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8' and metadata__name = 'nginx' and (containerName = '1-nginx' or containerName = '2-nginx');`<br/><br/>
-* `UPDATE synthetic.DEPLOYMENT_CONTAINER_VOLS SET mountPath = '/my/mnt2'
+* `UPDATE k8s.DEPLOYMENT_CONTAINER_VOLS SET mountPath = '/my/mnt2'
   WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8' and metadata__name = 'nginx' and containerName
-  in (SELECT containerName FROM synthetic.DEPLOYMENT_CONTAINER_VOLS WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8');`<br/><br/>
-
-Each query will print out the received context object and won't save or delete any information.   
+  in (SELECT containerName FROM k8s.DEPLOYMENT_CONTAINER_VOLS WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8');`<br/><br/>

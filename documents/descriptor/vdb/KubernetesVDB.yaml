@@ -1,64 +1,61 @@
 ---
-name: "k8s"
+name: "k8s_js_sample"
 version: "1"
 
 dataSourceModels:
-  - name: "k8s_ds"
-    dataSourceType: "KUBERNETES"
-    config: "bundle:k8s/k8s-config.yaml"
+  - name: "js_ds"
+    dataSourceType: "SCRIPT_DOCUMENT_JS"
+    config: "bundle:scripting/js-config.yaml"
 
 translatorModels:
-  - name: "k8s_translator"
-    dataSourceType: "KUBERNETES"
-    config: "bundle:translator/k8s-translator.yaml"
+  - name: "js_translator"
+    dataSourceType: "SCRIPT_DOCUMENT_JS"
+    config: "bundle:translator/js-translator.yaml"
 
-# In order to make it more realistic, we separated schemas into 2, please see the README file.
 schemaModels:
-  - name: "embed"
+  - name: "k8s"
     type: "PHYSICAL"
     dataMappings:
-      k8s_translator: "k8s_ds"
+      js_translator: "js_ds"
     ddl: |
-      CREATE FOREIGN TABLE DEPLOYMENT
-        (cluster__master__url string, metadata__name string, metadata__namespace string, metadata__labels string, 
-          containers__total integer, spec__template__spec__containers json OPTIONS(parser_format 'asJsonPretty'),
-          UNIQUE(cluster__master__url, metadata__namespace, metadata__name))
-      OPTIONS(updatable true,
-              supports_idempotency false);
-  - name: "synthetic"
-    type: "PHYSICAL"
-    dataMappings:
-      k8s_translator: "k8s_ds"
-    ddl: |
+      CREATE FOREIGN TABLE DEPLOYMENTS
+              (cluster__master__url string, metadata__name string, metadata__namespace string, metadata__labels string,
+                containers__total integer, spec__template__spec__containers json OPTIONS(parser_format 'asJsonPretty'),
+                UNIQUE(cluster__master__url, metadata__namespace, metadata__name))
+            OPTIONS(updatable true,
+                    supports_idempotency false);
+
       CREATE FOREIGN TABLE DEPLOYMENT_CONTAINER
-        (cluster__master__url string OPTIONS(insertable false),
-          metadata__name string NOT NULL OPTIONS(synthetic_type 'parent'), 
-          metadata__namespace string OPTIONS(synthetic_type 'parent'), 
-          metadata__labels string OPTIONS(updatable false, synthetic_type 'parent'),
-          
-          image string NOT NULL, 
-          name string NOT NULL,
-          command json,
-          volumeMounts json,
-          UNIQUE(metadata__namespace, metadata__name, name))
-      OPTIONS(updatable true, 
-              synthetic_parent 'embed.DEPLOYMENT', 
-              synthetic_path 'spec__template__spec__containers',
-              synthetic_allow_bulk_insert false);
-      
+          ( clusterName string OPTIONS(val_variable 'cluster_name'),
+            clusterUrl string OPTIONS(val_variable 'kubernetes_api_url'),
+            metadata__name string NOT NULL OPTIONS(synthetic_type 'parent'),
+            metadata__namespace string OPTIONS(synthetic_type 'parent'),
+            metadata__labels string OPTIONS(updatable false, synthetic_type 'parent'),
+
+            image string NOT NULL,
+            name string NOT NULL,
+            command json,
+            volumeMounts json,
+            UNIQUE(metadata__namespace, metadata__name, name))
+          OPTIONS(updatable true,
+                synthetic_parent 'k8s.DEPLOYMENTS',
+                synthetic_path 'spec__template__spec__containers',
+                synthetic_allow_bulk_insert false);
+
       CREATE FOREIGN TABLE DEPLOYMENT_CONTAINER_VOLS
-        (cluster__master__url string OPTIONS(insertable false),
-          metadata__name string NOT NULL OPTIONS(synthetic_type 'parent'), 
-          metadata__namespace string OPTIONS(synthetic_type 'parent'), 
-          metadata__labels string OPTIONS(synthetic_type 'parent'),
-          containerName string OPTIONS(synthetic_type 'parent_array_key', synthetic_parent_field 'name'),
-          containerImage string OPTIONS(synthetic_type 'parent_array_key', synthetic_parent_field 'image'),
-      
-          mountPath string NOT NULL, 
-          name string NOT NULL,
-          readOnly boolean,
-          UNIQUE(metadata__namespace, metadata__name, containerName, name))
-      OPTIONS(updatable true, 
-              synthetic_parent 'synthetic.DEPLOYMENT_CONTAINER', 
-              synthetic_path 'volumeMounts',
-              synthetic_allow_bulk_insert false);
+          ( clusterName string OPTIONS(val_variable 'cluster_name'),
+            clusterUrl string OPTIONS(val_variable 'kubernetes_api_url'),
+            metadata__name string NOT NULL OPTIONS(synthetic_type 'parent'),
+            metadata__namespace string OPTIONS(synthetic_type 'parent'),
+            metadata__labels string OPTIONS(synthetic_type 'parent'),
+            containerName string OPTIONS(synthetic_type 'parent_array_key', synthetic_parent_field 'name'),
+            containerImage string OPTIONS(synthetic_type 'parent_array_key', synthetic_parent_field 'image'),
+
+            mountPath string NOT NULL,
+            name string NOT NULL,
+            readOnly boolean,
+            UNIQUE(metadata__namespace, metadata__name, containerName, name))
+          OPTIONS(updatable true,
+                synthetic_parent 'k8s.DEPLOYMENT_CONTAINER',
+                synthetic_path 'volumeMounts',
+                synthetic_allow_bulk_insert false);

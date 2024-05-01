@@ -1,2 +1,2 @@
 virtualDatabases:
-  - 'vdb/KubernetesVDB.yaml'
+  - 'vdb/ApplicationVDB.yaml'
