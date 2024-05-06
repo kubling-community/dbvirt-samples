@@ -1,0 +1,12 @@
+transports:
+  pgProtocol:
+    bindAddress: "0.0.0.0"
+    portNumber: 35432
+  nativeProtocol:
+    bindAddress: "0.0.0.0"
+    portNumber: 35482
+    secure: false
+vdb:
+  descriptorBundle: {{ DESCRIPTOR_BUNDLE }}
+
+propertiesFilePath: {{ PROPS_FILE }}

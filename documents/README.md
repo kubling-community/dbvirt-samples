@@ -84,7 +84,7 @@ As you can see, from the `resultset` standpoint of view, your JavaScript works a
 
 We use the term lineage since synthetic entity can have another synthetic entity as parent, as shown in this sample (`DEPLOYMENT_CONTAINER_VOLS` entity)
 
-However, `INSERT`, `UPDATE` and `DELETE` operations work differently on synthetic entities, as follows:
+However, `INSERT`, `UPDATE` and `DELETE` operations work differently on synthetic entities, as described below.
 
 Operation objects injected in the JS context has members and functions that make it easier to identify what is received.
 
@@ -145,9 +145,6 @@ Please explore [samples code](modules/doc/action) to see a general idea of how i
 
 ## How to test it
 
-This sample uses an internal delegation module, therefore it is not needed in configuration.
-
-
 ### 1. Generate bundle files
 Execute [the gen-bundle script](gen-bundles.sh) to generate the zip files.
 
@@ -177,7 +174,7 @@ Or, assuming that you cloned the repo in `~/dbvirt-samples`, just run:
 ```
 docker run --rm \
     -e DESCRIPTOR_BUNDLE=/dbvirt-samples/documents/documents-descriptor-bundle.zip \
-    -e MODULE_BUNDLE=/dbvirt-samples/documents/modules/documents-modules-bundle.zip \
+    -e MODULE_BUNDLE=/dbvirt-samples/documents/modules/documents-module-bundle.zip \
     -e APP_CONFIG=/dbvirt-samples/documents/app-config.yaml \
     -e PROPS_FILE=/dbvirt-samples/documents/env.properties \
     -p 35432:35432 -p 8282:8282 \
@@ -189,7 +186,7 @@ docker run --rm \
 Once the container is running, run `psql -h localhost -p 35432 -U sa -d application` in a terminal. Type any password,
 we are not authenticating users in the example.
 Some queries you can start with:
-* `SELECT * FROM DEPLOYMENT WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8';`<br/><br/>
+* `SELECT * FROM k8s.DEPLOYMENTS WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8';`<br/><br/>
 * `SELECT * FROM k8s.DEPLOYMENT_CONTAINER WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8';`<br/><br/>
 * `SELECT * FROM k8s.DEPLOYMENT_CONTAINER WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8' and metadata__name = 'nginx';`<br/><br/>
 * `SELECT * FROM k8s.DEPLOYMENT_CONTAINER_VOLS WHERE metadata__namespace = '08abb0fc-f7af-4fe8-98d4-e76729567dc8';`<br/><br/>

@@ -19,14 +19,18 @@ schemaModels:
       js_translator: "js_ds"
     ddl: |
       CREATE FOREIGN TABLE DEPLOYMENTS
-              (cluster__master__url string, metadata__name string, metadata__namespace string, metadata__labels string,
-                containers__total integer, spec__template__spec__containers json OPTIONS(parser_format 'asJsonPretty'),
-                UNIQUE(cluster__master__url, metadata__namespace, metadata__name))
+               (clusterUrl string OPTIONS(val_variable 'kubernetes_api_url'),
+                metadata__name string, 
+                metadata__namespace string, 
+                metadata__labels string,
+                containers__total integer, 
+                spec__template__spec__containers json OPTIONS(parser_format 'asJsonPretty'),
+                UNIQUE(clusterUrl, metadata__namespace, metadata__name))
             OPTIONS(updatable true,
                     supports_idempotency false);
 
       CREATE FOREIGN TABLE DEPLOYMENT_CONTAINER
-          ( clusterName string OPTIONS(val_variable 'cluster_name'),
+           (clusterName string OPTIONS(val_variable 'cluster_name'),
             clusterUrl string OPTIONS(val_variable 'kubernetes_api_url'),
             metadata__name string NOT NULL OPTIONS(synthetic_type 'parent'),
             metadata__namespace string OPTIONS(synthetic_type 'parent'),
@@ -43,7 +47,7 @@ schemaModels:
                 synthetic_allow_bulk_insert false);
 
       CREATE FOREIGN TABLE DEPLOYMENT_CONTAINER_VOLS
-          ( clusterName string OPTIONS(val_variable 'cluster_name'),
+           (clusterName string OPTIONS(val_variable 'cluster_name'),
             clusterUrl string OPTIONS(val_variable 'kubernetes_api_url'),
             metadata__name string NOT NULL OPTIONS(synthetic_type 'parent'),
             metadata__namespace string OPTIONS(synthetic_type 'parent'),
