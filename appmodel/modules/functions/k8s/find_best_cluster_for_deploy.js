@@ -23,9 +23,9 @@ function(args) {
         // We need an additional query to determine the cluster<>schema
         result = DBEngine.executeQuery(
                 args.vdb,
-                `SELECT schema FROM k8s.DEPLOYMENT where identifier = '${result.getFirst().deployment_identifier}'`);
+                `SELECT schema FROM k8s.DEPLOYMENT where identifier = '${result.rows.getFirst().deployment_identifier}'`);
 
         print(result.count);
-        return result.getFirst().schema;
+        return result.rows.getFirst().schema;
     }
 }

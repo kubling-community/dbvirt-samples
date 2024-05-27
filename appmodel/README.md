@@ -94,12 +94,18 @@ Once the container is running, use the following commands to start testing:
     curl --location 'http://localhost:8282/api/v1/actions/run/add_component' \
       --header 'Content-Type: application/json' \
       --data '{
-          "app_id": [REPLACE BY my-new-app ID],
+          "app_id": "[REPLACE BY my-new-app ID]",
           "component_name": "app-backend",
           "component_description": "This is the backend"
       }'
   ```
 **_Tip:_** Use the info retrieved when calling `get_apps_full` to get my-new-app ID.
+
+If you are using the mock server, you'll receive an error indicating that 'Code Repository app-backend already exists.'.
+That is because we first check that actually the repository does not exist already in GitHub.
+
+To fix it, comment [the following section](https://github.com/kubling-community/dbvirt-mock-upstream/blob/master/src/main/resources/github_server_expect.yaml#L46), regenerate the server and try again.
+Once the operation done, uncomment it, so we are able to fetch info.
 
 #### Deploy a component to Kubernetes:
 * ```
@@ -130,6 +136,10 @@ Once the container is running, use the following commands to start testing:
   }'
   ```
 **_Tip:_** Call `get_apps_full` again and copy one of the associated component ID.  
+
+The strategy followed in this example, is creating a namespace named after the `component_id`.
+Therefore, you will need to adapt the mock server based on the namespace name. Go to [this file](https://github.com/kubling-community/dbvirt-mock-upstream/blob/master/src/main/resources/kubernetes_server_1_expect.yaml#L58) and replace the
+field selector by the component ID.
 
 #### Get last deploy transition (status):
 * ```
