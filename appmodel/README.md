@@ -54,7 +54,7 @@ docker run --rm \
     -e APP_CONFIG=[/path/to/app-config.yaml] \
     -e MODULE_BUNDLE=[/path/to/appmodel-module-bundle.zip] \
     -e FUNCTIONS_BUNDLE=[/path/to/appmodel-functions-bundle.zip] \
-    -e PROPS_FILE=[/path/to/env.properties] \
+    -e PROPS_FILE=[/path/to/app.properties] \
     -p 35432:35432 -p 8282:8282 \
     -v [/path/to/dbvirt-samples]:[mount/path] \
     kubling/dbvirt-ce:latest
@@ -67,7 +67,7 @@ docker run --rm \
     -e APP_CONFIG=/dbvirt-samples/appmodel/app-config.yaml \
     -e MODULE_BUNDLE=/dbvirt-samples/appmodel/modules/appmodel-module-bundle.zip \
     -e FUNCTIONS_BUNDLE=/dbvirt-samples/appmodel/modules/appmodel-functions-bundle.zip \
-    -e PROPS_FILE=/dbvirt-samples/appmodel/env.properties] \
+    -e PROPS_FILE=/dbvirt-samples/appmodel/app.properties] \
     -p 35432:35432 -p 8282:8282 \
     -v ~/dbvirt-samples:/dbvirt-samples \
     kubling/dbvirt-ce:latest
@@ -141,6 +141,6 @@ Once the container is running, use the following commands to start testing:
   }'
   ```
 
-### 4. Queries
+### 5. Queries
 At this point, we hope you're already familiar with queries, so we recommend trying queries with different complexity,
 as you were operating this company's IT/Cloud Infra. Enjoy! 

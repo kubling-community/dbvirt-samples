@@ -12,7 +12,6 @@ query: |
     a.ID as app_id,
     c.ID as component_id, 
     c.NAME as component_name, 
-    c.APPLICATION_ID as app_id, 
     r.url as repo_location,
     cd.DEPLOYMENT_IDENTIFIER,
     cd.environment,
