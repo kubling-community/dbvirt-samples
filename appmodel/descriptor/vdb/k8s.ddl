@@ -1,21 +1,58 @@
+CREATE FOREIGN TABLE NAMESPACE
+   (clusterName string OPTIONS(val_variable 'cluster_name'),
+    clusterUrl string OPTIONS(val_constant '{{ schemaModel.properties.kubernetes_api_url }}'),
+    schema string OPTIONS(val_constant '{{ schemaModel.name }}'),
+    metadata__name string,
+    metadata__labels json OPTIONS(parser_format 'asJsonPretty'),
+    status__phase string,
+    PRIMARY KEY(metadata__name),
+    UNIQUE(clusterUrl, metadata__name))
+OPTIONS(updatable true,
+        supports_idempotency false,
+        tags 'kubernetes;{{ schemaModel.properties.cluster_name }};namespace');
+
 CREATE FOREIGN TABLE DEPLOYMENT
    (clusterName string OPTIONS(val_variable 'cluster_name'),
-    clusterUrl string OPTIONS(val_variable 'kubernetes_api_url'),
+    clusterUrl string OPTIONS(val_constant '{{ schemaModel.properties.kubernetes_api_url }}'),
+    schema string OPTIONS(val_constant '{{ schemaModel.name }}'),
     metadata__name string,
     metadata__namespace string,
-    metadata__labels string,
-    containers__total integer,
+    metadata__labels json OPTIONS(parser_format 'asJsonPretty'),
     spec__template__spec__containers json OPTIONS(parser_format 'asJsonPretty'),
-    identifier string OPTIONS(val_pk 'clusterName+metadata__namespace+metadata__name' ),
+    spec__selector__matchLabels json OPTIONS(parser_format 'asJsonPretty'),
+    spec__template__metadata__labels json OPTIONS(parser_format 'asJsonPretty'),
+    status__conditions json OPTIONS(parser_format 'asJsonPretty'),
+    status__availableReplicas integer,
+    status__readyReplicas integer,
+    status__replicas integer,
+    status__updatedReplicas integer,
+    identifier string NOT NULL OPTIONS(val_pk 'clusterName+metadata__namespace+metadata__name' ),
     PRIMARY KEY(identifier),
     UNIQUE(clusterUrl, metadata__namespace, metadata__name))
 OPTIONS(updatable true,
         supports_idempotency false,
         tags 'kubernetes;{{ schemaModel.properties.cluster_name }};deployment');
 
+CREATE FOREIGN TABLE DEPLOYMENT_CONDITIONS
+   (clusterName string OPTIONS(val_variable 'cluster_name'),
+    clusterUrl string OPTIONS(val_constant '{{ schemaModel.properties.kubernetes_api_url }}'),
+    metadata__name string NOT NULL OPTIONS(synthetic_type 'parent'),
+    metadata__namespace string OPTIONS(synthetic_type 'parent'),
+
+    lastTransitionTime string,
+    lastUpdateTime string,
+    message string,
+    reason string,
+    status string,
+    type string)
+  OPTIONS(updatable false,
+        synthetic_parent '{{ schemaModel.name }}.DEPLOYMENT',
+        synthetic_path 'status__conditions',
+        tags 'kubernetes;{{ schemaModel.properties.cluster_name }};deployment_conditions');
+
 CREATE FOREIGN TABLE DEPLOYMENT_CONTAINER
    (clusterName string OPTIONS(val_variable 'cluster_name'),
-    clusterUrl string OPTIONS(val_variable 'kubernetes_api_url'),
+    clusterUrl string OPTIONS(val_constant '{{ schemaModel.properties.kubernetes_api_url }}'),
     metadata__name string NOT NULL OPTIONS(synthetic_type 'parent'),
     metadata__namespace string OPTIONS(synthetic_type 'parent'),
     metadata__labels string OPTIONS(updatable false, synthetic_type 'parent'),
@@ -35,7 +72,7 @@ CREATE FOREIGN TABLE DEPLOYMENT_CONTAINER
 
 CREATE FOREIGN TABLE DEPLOYMENT_CONTAINER_VOLS
    (clusterName string OPTIONS(val_variable 'cluster_name'),
-    clusterUrl string OPTIONS(val_variable 'kubernetes_api_url'),
+    clusterUrl string OPTIONS(val_constant '{{ schemaModel.properties.kubernetes_api_url }}'),
     metadata__name string NOT NULL OPTIONS(synthetic_type 'parent'),
     metadata__namespace string OPTIONS(synthetic_type 'parent'),
     metadata__labels string OPTIONS(synthetic_type 'parent'),

@@ -1,0 +1,31 @@
+{% set vdb = "App" %}
+---
+type: sqlDirect
+virtualDatabase: {{ vdb }}
+
+neededFields:
+  - app_name
+
+query: |
+  SELECT
+    a.NAME as app_name,
+    a.ID as app_id,
+    c.ID as component_id, 
+    c.NAME as component_name, 
+    c.APPLICATION_ID as app_id, 
+    r.url as repo_location,
+    cd.DEPLOYMENT_IDENTIFIER,
+    cd.environment,
+    deploy.clusterName as cluster,
+    deploy.clusterName as cluster,
+    deploy.status__replicas  as deesiredReplicas,
+    deploy.status__availableReplicas as availableReplicas,
+    deploy.status__readyReplicas  as readyReplicas
+  FROM
+    app_db.APPLICATION a
+    LEFT JOIN app_db.COMPONENT c ON c.APPLICATION_ID = a.ID
+    LEFT JOIN COMPONENT_CODE_REPO_JOIN cc ON cc.COMPONENT_ID = c.ID
+    LEFT JOIN app_db.COMPONENT_DEPLOYMENT_JOIN cd ON cd.COMPONENT_ID = c.ID
+    LEFT JOIN /*+ makedep */ app_delegate.CODE_REPO r ON (r.org = cc.CODE_REPO_ORG AND r.name = cc.CODE_REPO_NAME)
+    LEFT JOIN /*+ makedep */ k8s.DEPLOYMENT deploy  ON (deploy.identifier = cd.DEPLOYMENT_IDENTIFIER)
+  WHERE a.NAME='{{ app_name }}'

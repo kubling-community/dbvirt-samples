@@ -1,0 +1,138 @@
+{% set ds_embedded_name = "app_db" %}
+{% set ds_k8s_name = "app_kubernetes" %}
+{% set ds_delegate_name = "app_delegate" %}
+
+{% set translator_embedded_name = "db_translator" %}
+{% set translator_k8s_name = "k8s_translator" %}
+{% set translator_delegate_name = "js_translator" %}
+
+---
+name: "App"
+version: "{{ vdb_version }}"
+
+dataSourceModels:
+
+#  Uncomment if you want to use an ephemeral in-mem DB, although for this particular sample we do recommend using postgres
+#  - name: "{{ ds_embedded_name }}"
+#    dataSourceType: "EMBEDDED_INMEM"
+#    config: "bundle:datasource/embedded-datasource.yaml"
+
+  - name: "{{ ds_embedded_name }}"
+    dataSourceType: "POSTGRESQL"
+    config: "bundle:datasource/psql-datasource.yaml"
+
+  - name: "k8s_1_ds"
+    dataSourceType: "KUBERNETES"
+    config: "bundle:datasource/k8s-cluster1-datasource.yaml"
+    properties:
+      cluster_name: "my_demo_cluster_1"
+      kubernetes_api_url: {{ kubernetes_cluster_1_api_url }}
+  - name: "k8s_2_ds"
+    dataSourceType: "KUBERNETES"
+    config: "bundle:datasource/k8s-cluster2-datasource.yaml"
+    properties:
+      cluster_name: "my_demo_cluster_2"
+      kubernetes_api_url: {{ kubernetes_cluster_2_api_url }}
+
+  - name: "{{ ds_delegate_name }}"
+    dataSourceType: "SCRIPT_DOCUMENT_JS"
+    config: "bundle:datasource/js-datasource.yaml"
+
+translatorModels:
+  - name: "{{ translator_embedded_name }}"
+#    dataSourceType: "EMBEDDED_INMEM" << Uncomment if you're using in-mem option and comment following line
+    dataSourceType: "POSTGRESQL"
+    config: "bundle:translator/base-translator-config.yaml"
+  - name: "{{ translator_delegate_name }}"
+    dataSourceType: "SCRIPT_DOCUMENT_JS"
+    config: "bundle:translator/base-translator-config.yaml"
+  - name: "{{ translator_k8s_name }}"
+    dataSourceType: "KUBERNETES"
+    config: "bundle:translator/base-translator-config.yaml"
+
+schemaModels:
+
+  ## JOIN SCHEMA ⌄ ⌄ ⌄
+
+  # Important! This Schema is only an import, therefore we assume that the remote data source already has the expected schema,
+  # which, in the particular example, specified in the Data Source config file.
+  - name: "app_db"
+    type: "PHYSICAL"
+    dataMappings:
+      {{ translator_embedded_name }}: "{{ ds_embedded_name }}"
+    properties:
+      'importer.useFullSchemaName': 'false'
+      'importer.useCatalogName': 'false'
+      'importer.schemaName': 'public'
+
+  ## DELEGATE TO JS ⌄ ⌄ ⌄
+
+  - name: "app_delegate"
+    type: "PHYSICAL"
+    dataMappings:
+      {{ translator_delegate_name }}: "{{ ds_delegate_name }}"
+    ddl: |
+      CREATE FOREIGN TABLE CODE_REPO
+                ( 
+                  identifier string OPTIONS(val_pk 'org+name' ),
+                  org string not null, 
+                  owner__login string, 
+                  id integer,
+                  node_id string,
+                  name string not null,
+                  full_name string, 
+                  description string, 
+                  private boolean, 
+                  visibility string, 
+                  url string,
+                  owner json OPTIONS(parser_format 'asJsonPretty'),                  
+                  PRIMARY KEY(identifier)
+            ) OPTIONS(updatable true);
+
+  ## KUBERNETES ⌄ ⌄ ⌄
+
+  - name: "k8s_1"
+    type: "PHYSICAL"
+    dataMappings:
+      k8s_translator: "k8s_1_ds"
+    properties:
+      cluster_name: "k8s_cluster_1"
+      kubernetes_api_url: {{ kubernetes_cluster_1_api_url }}
+    ddlFilePaths:
+      - "bundle:k8s.ddl"
+
+  - name: "k8s_2"
+    type: "PHYSICAL"
+    dataMappings:
+      k8s_translator: "k8s_2_ds"
+    properties:
+      cluster_name: "k8s_cluster_2"
+      kubernetes_api_url: {{ kubernetes_cluster_2_api_url }}
+    ddlFilePaths:
+      - "bundle:k8s.ddl"
+
+## In order to avoid having to define aggregated views, the Engine has a special schema
+## type called aggregatorSchemaModels which creates new schemas that contains VIEWS ONLY,
+## by aggregating other schemas with the same entity structure, that is, DDL.
+
+aggregatorSchemaModels:
+  - name: "k8s"
+    schemas:
+      - "k8s_1"
+      - "k8s_2"
+    tables:
+      - name: "DEPLOYMENT"
+        options:
+          updatable: false
+      - name: "NAMESPACE"
+        options:
+          updatable: false
+      - name: "DEPLOYMENT_CONDITIONS"
+        options:
+          updatable: false
+      - name: "DEPLOYMENT_CONTAINER"
+        options:
+          updatable: false
+      - name: "DEPLOYMENT_CONTAINER_VOLS"
+        options:
+          updatable: false

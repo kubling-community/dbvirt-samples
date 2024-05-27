@@ -1,0 +1,4 @@
+masterUrl: "{{ kubernetes_cluster_1_api_url }}"
+# We do recommend using a real Kubernetes in order to this sample make sense.
+# See README to get info on how to easily deploy a k3s
+#configFile:

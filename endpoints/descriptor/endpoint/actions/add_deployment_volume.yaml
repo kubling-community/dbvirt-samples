@@ -14,7 +14,7 @@ needed:
 before:
   - name: "Deployment Container exists"
     virtualDatabase: {{ vdb }}
-    # We don't expect more than one matching table here so we use 'first' filter...
+    # We don't expect more than one matching table here, so we use 'first' filter...
     entity: "{{ tables | first }}"
     filters:
       - field: "metadata__namespace"
