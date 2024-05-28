@@ -1,5 +1,5 @@
 dataSourceName: "app"
-serverAddress: 172.20.20.110
+serverAddress: 0.0.0.0
 serverPort: 5432
 userName: "postgres"
 token: "mysecretpassword"
