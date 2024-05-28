@@ -84,7 +84,7 @@ schemaModels:
                   description string, 
                   private boolean, 
                   visibility string, 
-                  url string,
+                  html_url string,
                   owner json OPTIONS(parser_format 'asJsonPretty'),                  
                   PRIMARY KEY(identifier)
             ) OPTIONS(updatable true);
