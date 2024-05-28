@@ -13,9 +13,7 @@ function(args) {
         const tables = DBEngine.getTableNamesByTags(args.vdb, null, ["kubernetes", "deployment"]);
         if (tables.isEmpty())
             throw new Error("No tables found tagged with: kubernetes;deployment");
-        const index = Math.floor(Math.random() * (tables.size() - 1 + 1) + 1);
-        print(index);
-        print(tables.get(index - 1));
+        const index = Math.floor(Math.random() * (tables.size()) + 1);
         return tables.get(index - 1).substring(0, tables.get(index - 1).indexOf("."));
 
     } else {
@@ -25,7 +23,6 @@ function(args) {
                 args.vdb,
                 `SELECT schema FROM k8s.DEPLOYMENT where identifier = '${result.rows.getFirst().deployment_identifier}'`);
 
-        print(result.count);
         return result.rows.getFirst().schema;
     }
 }
