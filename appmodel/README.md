@@ -67,7 +67,7 @@ docker run --rm \
     -e APP_CONFIG=/dbvirt-samples/appmodel/app-config.yaml \
     -e MODULE_BUNDLE=/dbvirt-samples/appmodel/modules/appmodel-module-bundle.zip \
     -e FUNCTIONS_BUNDLE=/dbvirt-samples/appmodel/modules/appmodel-functions-bundle.zip \
-    -e PROPS_FILE=/dbvirt-samples/appmodel/app.properties] \
+    -e PROPS_FILE=/dbvirt-samples/appmodel/app.properties \
     -p 35432:35432 -p 8282:8282 \
     -v ~/dbvirt-samples:/dbvirt-samples \
     kubling/dbvirt-ce:latest
