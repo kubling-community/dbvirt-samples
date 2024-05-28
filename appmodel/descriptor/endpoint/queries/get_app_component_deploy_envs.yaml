@@ -1,5 +1,4 @@
 {% set vdb = "App" %}
-{% set deploymentTables = getTablesByTags(vdb=_context.vdb, schema="all", tags="kubernetes;deployment") %}
 ---
 type: sqlDirect
 virtualDatabase: {{ vdb }}

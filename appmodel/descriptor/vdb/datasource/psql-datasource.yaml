@@ -1,5 +1,5 @@
 dataSourceName: "app"
-serverAddress: {{ PG_ADDRESS }}
+serverAddress: 172.20.20.110
 serverPort: 5432
-userName: "{{ PG_USER }}"
-token: "{{ PG_PASS }}"
+userName: "postgres"
+token: "mysecretpassword"

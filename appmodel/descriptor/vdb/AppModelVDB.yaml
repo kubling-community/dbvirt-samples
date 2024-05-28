@@ -55,7 +55,7 @@ schemaModels:
   ## JOIN SCHEMA ⌄ ⌄ ⌄
 
   # Important! This Schema is only an import, therefore we assume that the remote data source already has the expected schema,
-  # which, in the particular example, specified in the Data Source config file.
+  # which, in the particular example, is specified in the Data Source config file when using in-mem but in Postgres must be applied manually.
   - name: "app_db"
     type: "PHYSICAL"
     dataMappings:
@@ -112,7 +112,7 @@ schemaModels:
       - "bundle:k8s.ddl"
 
 ## In order to avoid having to define aggregated views, the Engine has a special schema
-## type called aggregatorSchemaModels which creates new schemas that contains VIEWS ONLY,
+## type called aggregatorSchemaModels which creates new schemas that contain VIEWS ONLY,
 ## by aggregating other schemas with the same entity structure, that is, DDL.
 
 aggregatorSchemaModels:
