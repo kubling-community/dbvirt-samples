@@ -16,10 +16,9 @@ query: |
     cd.DEPLOYMENT_IDENTIFIER,
     cd.environment,
     deploy.clusterName as cluster,
-    deploy.clusterName as cluster,
-    deploy.status__replicas  as deesiredReplicas,
-    deploy.status__availableReplicas as availableReplicas,
-    deploy.status__readyReplicas  as readyReplicas
+    deploy.status__replicas  as desired_replicas,
+    deploy.status__availableReplicas as available_replicas,
+    deploy.status__readyReplicas as ready_replicas
   FROM
     app_db.APPLICATION a
     LEFT JOIN app_db.COMPONENT c ON c.APPLICATION_ID = a.ID
