@@ -1,0 +1,25 @@
+{% set ds_delegate_name = "app_delegate" %}
+{% set translator_delegate_name = "js_translator" %}
+---
+name: "Azure"
+version: "{{ vdb_version }}"
+
+dataSourceModels:
+  - name: "{{ ds_delegate_name }}"
+    dataSourceType: "SCRIPT_DOCUMENT_JS"
+    config: "bundle:datasource/js-datasource.yaml"
+
+translatorModels:
+  - name: "{{ translator_delegate_name }}"
+    dataSourceType: "SCRIPT_DOCUMENT_JS"
+    config: "bundle:translator/base-translator-config.yaml"
+
+schemaModels:
+  - name: "app_delegate"
+    type: "PHYSICAL"
+    dataMappings:
+      {{ translator_delegate_name }}: "{{ ds_delegate_name }}"
+    properties:
+      azure_subscription: "{{ AZ_SUBSCRIPTION_ID }}"
+    ddlFilePaths:
+      - "bundle:azure.ddl"

@@ -4,7 +4,7 @@ Goal
 : Get familiar with the RBAC authentication and authorization extension mechanism.
 
 Difficulty
-: Easy
+: Low
 
 ## How to test it
 

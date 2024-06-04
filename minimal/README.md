@@ -4,7 +4,7 @@ Goal
 : Get familiar with the basic structure of a `DBVirt` bundle file and JavaScript Modules
 
 Difficulty
-: Easy
+: Low
 
 ## How to test it
 

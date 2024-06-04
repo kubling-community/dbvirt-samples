@@ -1,0 +1,10 @@
+initScript:
+  scriptFilePath: "init/init_azure_token.js"
+scheduledScripts:
+  - scriptFilePath: "scheduled/refresh_azure_token.js"
+    cron: "*/10 * * * *"
+
+resultSetScript:
+  scriptFilePath: "action/resultset.js"
+insertScript:
+  scriptFilePath: "action/insert.js"

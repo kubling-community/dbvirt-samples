@@ -1,0 +1,5 @@
+minContexts: 5
+maxContexts: 10
+functions:
+  - name: "az_sql_get_rg"
+    scriptFilePath: "fn/azure/sql_get_rg.js"

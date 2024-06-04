@@ -2,6 +2,5 @@ virtualDatabases:
   - 'vdb/AppModelVDB.yaml'
 actionsDirectory: 'endpoint/actions'
 queryEndpointsDirectory: 'endpoint/queries'
-actionTemplatesFunctionModules:
-  - priorityResolution: 1
-    zipFilePath: "{{ FUNCTIONS_BUNDLE }}"
+actionTemplatesFunctionModule:
+  zipFilePath: "{{ FUNCTIONS_BUNDLE }}"

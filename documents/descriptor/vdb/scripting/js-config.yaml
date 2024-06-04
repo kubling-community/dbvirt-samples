@@ -1,5 +1,4 @@
-modules:
-  - priorityResolution: 1
-    zipFilePath: "{{ MODULE_BUNDLE }}"
+module:
+  zipFilePath: "{{ MODULE_BUNDLE }}"
 contextVariables:
   cluster_name: "my_demo_cluster"

@@ -1,9 +1,2 @@
-# The list of bundle modules that will be loaded by the engine.
-
-modules:
-    # Import resolution order, useful when overriding other's module functionality
-  - priorityResolution: 1
-    # Location (URI) of the Bundle module Zip File.
-    # Supports http(s) with credentials in the form of https://[username[:password]@]hostname[:port][absolute-path]
-    # You can keep using this env var or just replace the value by the location
-    zipFilePath: "{{ MODULE_BUNDLE }}"
+module:
+  zipFilePath: "{{ MODULE_BUNDLE }}"

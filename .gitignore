@@ -10,3 +10,6 @@
 /appmodel/modules/appmodel-functions-bundle.zip
 /appmodel/modules/appmodel-module-bundle.zip
 /appmodel/appmodel-descriptor-bundle.zip
+/azure/modules/azure-module-bundle.zip
+/azure/azure-descriptor-bundle.zip
+/azure/modules/azure-sql-fn-parser-bundle.zip

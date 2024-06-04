@@ -6,7 +6,7 @@ In a real world use case, we could use this feature to avoid having to incorpora
 tokens and refreshing them in scripts like the `authenticator`, by keeping one global-scoped token per service, injected in all context's threads.
 
 Difficulty
-: Easy
+: Low
 
 ## How to test it
 
