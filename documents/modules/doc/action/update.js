@@ -10,7 +10,7 @@ updateOperation.differences.forEach(function(diffResult) {
         print('DOC >>> ' + updateOperation.jsonList.array()[docPos]);
         print('MOD >>> ' + diffResult.modified.array()[0]);
         print('JSONPath >>> ' + diffResult.modified.array()[0] + ' RETURNED ' +
-            JSONPath.read(updateOperation.jsonList.array()[docPos], diffResult.modified.array()[0]).stringify());
+            helper.jsonPath().read(updateOperation.jsonList.array()[docPos], diffResult.modified.array()[0]).stringify());
     }
 
     if (!diffResult.removed.isEmpty())

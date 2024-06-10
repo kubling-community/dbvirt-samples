@@ -6,5 +6,10 @@ scheduledScripts:
 
 resultSetScript:
   scriptFilePath: "action/resultset.js"
+# Comment the resultSetScript above and uncomment below, to see the difference in performance when using dynamic eval
+# as explained in the README
+#resultSetScript:
+#  scriptFilePath: "action/rs_router.js"
+
 insertScript:
   scriptFilePath: "action/insert.js"

@@ -92,3 +92,14 @@ export function incrementBasedOnAPIResponseOrFail(response) {
         throw new Error(`Error calling service API: ${response.content}`);
     affectedRows.increment();
 }
+
+export function extractFilterField(filter, fieldName) {
+    if (filter.field === fieldName)
+        return filter.value.toString();
+    else
+        return null;
+}
+
+export function removeEnclosingDoubleQuote(text) {
+    return text.replace(/^"(.*)"$/, '$1');
+}

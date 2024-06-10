@@ -24,6 +24,29 @@ In this sample we introduce the "custom transform/parse function" feature that g
 custom functions that can be invoked to transform the value of a column.
 Functions are bundled in a separate module file, for more info please see [the bundle info](modules/parser/bundle-sql-function-info.yaml)
 
+## Dynamic evaluation
+In some **specific** circumstances when the entry script, like `resultset`, has several imports, it is worth considering
+using the dynamic evaluation feature.<br>
+This feature allows to dynamically evaluate scripts without having to import functions or classes, making easier the work for the compiler.
+
+All contexts have a special objects called `executeJS` which allows to call JavaScript source, parse it and make the evaluation.
+
+When evaluating dynamically, a new separate `context` is created, meaning that the current one is put on-hold until the new one finishes.
+That is important, since you should make a decision about what approach to use based on the following trade-off:
+
+* `import`s generates bigger AST (abstract syntax tree) but uses a single context.
+* `executeJS` creates a new context per `eval` call but, when designed properly, the final AST can be considerable smaller.
+
+Suggestion is to benchmark both approaches by measuring how engine behaves in your scenario.
+
+In case you want to test it, uncomment the second resultSetScript in [bundle-script-info.yaml](modules%2Fdelegate%2Fbundle-script-info.yaml).
+You can also explore [rs_router.js](modules%2Fdelegate%2Faction%2Frs_router.js) and how the `eval` chain works.
+
+### Discard the sometimes-slow Azure API time
+Storage account handler, in both implementations, print the time Azure API took to return the final response, let's call it `printed_time`.<br>
+In order to have an estimate of the Engine's effort, we suggest to use the `psql` feature `\timing on`, use the reported time in `ms` as `total_time`
+and then do: <br> `effort(ms) = total_time - printed_time`.
+
 ## The kdv CLI tool
 The [bundle generator](gen-bundles.sh) of this sample does not create the json module bundle using the standard `zip` command,
 instead it uses the `kdv` binary located in the [root of the repo](../kdv).

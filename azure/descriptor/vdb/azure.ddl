@@ -44,3 +44,39 @@ CREATE FOREIGN TABLE STORAGE_ACCOUNT_PROPERTIES
             synthetic_parent '{{ schemaModel.name }}.STORAGE_ACCOUNT',
             synthetic_path 'properties',
             tags 'azure;{{ schemaModel.properties.azure_subscription }};storage;account;properties');
+
+CREATE FOREIGN TABLE PSQL_SERVER
+   (
+        subscription string OPTIONS(val_constant '{{ schemaModel.properties.azure_subscription }}'),
+        resourceGroup string OPTIONS(call_func 'az_sql_get_rg<id>'),
+        sku json OPTIONS(parser_format 'asJsonPretty'),
+        "identity" string,
+        properties json OPTIONS(parser_format 'asJsonPretty'),
+        tags json OPTIONS(parser_format 'asJsonPretty'),
+        location string,
+        "id" string,
+        name string,
+        type string,
+        systemData string,
+        PRIMARY KEY(id)
+   )
+    OPTIONS(updatable true,
+            supports_idempotency false,
+            tags 'azure;{{ schemaModel.properties.azure_subscription }};postgresql');
+
+CREATE FOREIGN TABLE CONTAINER_REGISTRY
+   (
+        subscription string OPTIONS(val_constant '{{ schemaModel.properties.azure_subscription }}'),
+        resourceGroup string OPTIONS(call_func 'az_sql_get_rg<id>'),
+        sku json OPTIONS(parser_format 'asJsonPretty'),
+        "identity" string,
+        properties json OPTIONS(parser_format 'asJsonPretty'),
+        "id" string,
+        name string,
+        type string,
+        systemData string,
+        PRIMARY KEY(id)
+   )
+    OPTIONS(updatable true,
+            supports_idempotency false,
+            tags 'azure;{{ schemaModel.properties.azure_subscription }};postgresql');

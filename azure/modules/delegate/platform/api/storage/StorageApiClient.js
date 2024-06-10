@@ -54,7 +54,7 @@ class ApiClient {
          * @default {}
          */
         this.defaultHeaders = {
-            'User-Agent': 'OpenAPI-Generator/2020-05-01/Javascript'
+            'User-Agent': 'OpenAPI-Generator/2023-01-01/Javascript'
         };
 
         /**
@@ -78,24 +78,6 @@ class ApiClient {
          * @default false
          */
         this.enableCookies = false;
-
-        /*
-         * Used to save and return cookies in a node.js (non-browser) setting,
-         * if this.enableCookies is set to true.
-         */
-//        if (typeof window === 'undefined') {
-//          this.agent = new superagent.agent();
-//        }
-
-        /*
-         * Allow user to override superagent agent
-         */
-         this.requestAgent = null;
-
-        /*
-         * Allow user to add superagent plugins
-         */
-//        this.plugins = null;
 
     }
 
@@ -300,9 +282,8 @@ class ApiClient {
             switch (auth.type) {
                 case 'basic':
                     if (auth.username || auth.password) {
-//                        request.auth(auth.username || '', auth.password || '');
-                          request.credentials.username = auth.username || '';
-                          request.credentials.password = auth.password || '';
+                        request.credentials.username = auth.username || '';
+                        request.credentials.password = auth.password || '';
                     }
 
                     break;
@@ -311,8 +292,7 @@ class ApiClient {
                         var localVarBearerToken = typeof auth.accessToken === 'function'
                           ? auth.accessToken()
                           : auth.accessToken
-//                        request.set({'Authorization': 'Bearer ' + localVarBearerToken});
-                          request.headers.Authorization = 'Bearer ' + localVarBearerToken;
+                        request.headers.Authorization = 'Bearer ' + localVarBearerToken;
                     }
 
                     break;
@@ -326,10 +306,8 @@ class ApiClient {
                         }
 
                         if (auth['in'] === 'header') {
-                            //request.set(data);
                             request.headers[auth.name] = data[auth.name];
                         } else {
-                            //request.query(data);
                             request.params[auth.name] = data[auth.name];
                         }
                     }
@@ -337,8 +315,7 @@ class ApiClient {
                     break;
                 case 'oauth2':
                     if (auth.accessToken) {
-                        //request.set({'Authorization': 'Bearer ' + auth.accessToken});
-                        request.headers.Authorization = 'Bearer ' + auth.accessToken;
+                        request.headers["Authorization"] = 'Bearer ' + auth.accessToken;
                     }
 
                     break;
@@ -358,19 +335,13 @@ class ApiClient {
     * @returns A value of the specified type.
     */
     deserialize(response, returnType) {
-        if (response == null || returnType == null || response.status == 204) {
+
+        if (response == null || returnType == null) {
             return null;
         }
 
-        // Rely on SuperAgent for parsing response body.
-        // See http://visionmedia.github.io/superagent/#parsing-response-bodies
-        var data = response.body;
-        if (data == null || (typeof data === 'object' && typeof data.length === 'undefined' && !Object.keys(data).length)) {
-            // SuperAgent does not always produce a body; use the unparsed response as a fallback
-            data = response.text;
-        }
+        return ApiClient.convertToType(response, returnType);
 
-        return ApiClient.convertToType(data, returnType);
     }
 
    /**
@@ -404,11 +375,11 @@ class ApiClient {
         returnType, apiBasePath, callback) {
 
         var url = this.buildUrl(path, pathParams, apiBasePath);
-//        var request = superagent(httpMethod, url);
 
         var request = {
              "url": url,
-             "method": httpMethod
+             "method": httpMethod,
+             "headers": headerParams
         }
 
         // apply authentications
@@ -419,31 +390,26 @@ class ApiClient {
             queryParams['_'] = new Date().getTime();
         }
 
-//        request.query(this.normalizeParams(queryParams));
         request.params = this.normalizeParams(queryParams);
-
-        // set header parameters
-        request.set(this.defaultHeaders).set(this.normalizeParams(headerParams));
 
         // set requestAgent if it is set by user
         if (this.requestAgent) {
-          request.userAgent(this.requestAgent);
+          request.agent(this.requestAgent);
         }
 
         // set request timeout
-        request.timeout(this.timeout);
+        request.timeout = this.timeout;
 
         var contentType = this.jsonPreferredMime(contentTypes);
         if (contentType) {
             // Issue with superagent and multipart/form-data (https://github.com/visionmedia/superagent/issues/746)
             if(contentType != 'multipart/form-data') {
-                request.contentType(contentType);
+                request.contentType = contentType;
             }
         }
 
         if (contentType === 'application/x-www-form-urlencoded') {
-            //request.send(querystring.stringify(this.normalizeParams(formParams)));
-            request.body(querystring.stringify(this.normalizeParams(formParams)));
+            request.send(querystring.stringify(this.normalizeParams(formParams)));
         } else if (contentType == 'multipart/form-data') {
             var _formParams = this.normalizeParams(formParams);
             for (var key in _formParams) {
@@ -451,76 +417,45 @@ class ApiClient {
                     let _formParamsValue = _formParams[key];
                     if (this.isFileParam(_formParamsValue)) {
                         // file field
-                        //request.attach(key, _formParamsValue);
-                        var f = httpCli.newFileWrapper(key);
-
-                        //request.form[key] =
+                        // var f = httpCli.newFileWrapper(key);
+                        // TODO implement it using httpCli filewrapper
                     } else if (Array.isArray(_formParamsValue) && _formParamsValue.length
                         && this.isFileParam(_formParamsValue[0])) {
                         // multiple files
-                        //_formParamsValue.forEach(file => request.attach(key, file));
+                        // _formParamsValue.forEach(file => request.attach(key, file));
+                        // TODO implement it
                     } else {
-                        request.form[key] = _formParamsValue;
+                        request.field(key, _formParamsValue);
                     }
                 }
             }
         } else if (bodyParam !== null && bodyParam !== undefined) {
-            if (!request.headers['Content-Type']) {
-                request.contentType = 'application/json';
+            if (!request.header['Content-Type']) {
+                request.type('application/json');
             }
-            //request.send(bodyParam);
-            request.body(bodyParam);
+            request.body = bodyParam;
         }
 
         var accept = this.jsonPreferredMime(accepts);
         if (accept) {
-            request.accept(accept);
+            request.accept = accept;
         }
-
-//        if (returnType === 'Blob') {
-//          request.responseType('blob');
-//        } else if (returnType === 'String') {
-//          request.responseType('text');
-//        }
-
-        // Attach previously saved cookies, if enabled
-//        if (this.enableCookies){
-//            if (typeof window === 'undefined') {
-//                this.agent._attachCookies(request);
-//            }
-//            else {
-//                request.withCredentials();
-//            }
-//        }
-
-//        request.end((error, response) => {
-//            if (callback) {
-//                var data = null;
-//                if (!error) {
-//                    try {
-//                        data = this.deserialize(response, returnType);
-//                        if (this.enableCookies && typeof window === 'undefined'){
-//                            this.agent._saveCookies(response);
-//                        }
-//                    } catch (err) {
-//                        error = err;
-//                    }
-//                }
-//
-//                callback(error, data, response);
-//            }
-//        });
 
         let resp = httpCli.exec(request);
         if (callback) {
             var err = null;
-            if (resp.statusCode > 400) {
-                err = resp.statusMessage;
+            var data = null;
+            if (resp.statusCode >= 400) {
+                err = "Error: " + ((resp.statusMessage === null) || (resp.statusMessage === undefined)) ? resp.content : resp.statusMessage;
+                data = resp.content;
+            } else {
+                data = (!resp.content) ? {} : this.deserialize(JSON.parse(resp.content), returnType);
             }
-            callback(err, resp.content, resp.statusCode);
+            callback(err, data, resp.statusCode);
         }
 
         return resp;
+
     }
 
     /**

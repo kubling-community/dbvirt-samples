@@ -176,7 +176,7 @@ export function updateGitHubRepo() {
 
     var docPos = 0;
     updateOperation.jsonList.forEach(function(doc) {
-        let newDoc = JSONPath.excludeNonListedFields(doc, updateOperation.differences.array()[docPos].modified.stringify());
+        let newDoc = helper.jsonPath().excludeNonListedFields(doc, updateOperation.differences.array()[docPos].modified.stringify());
 
         let fullDoc = JSON.parse(doc);
         let repoData = JSON.parse(newDoc);
