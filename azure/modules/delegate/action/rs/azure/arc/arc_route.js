@@ -11,6 +11,6 @@ client.authentications = {
 contextVars.apiClient = client;
 
 if (queryFilter.table === "PSQL_SERVER") {
-    executeJS.eval('action/rs/azure/arc/storage_account');
+    executeJS.eval('action/rs/azure/arc/psql_server');
 }
 
