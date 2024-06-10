@@ -10,6 +10,7 @@ export function generateAzureToken() {
         }
     }
     
+    print(JSON.stringify(tokenRequest));
     let resp = httpCli.exec(tokenRequest);
     if (resp.statusCode >= 400) {
         throw new Error(resp.content);
