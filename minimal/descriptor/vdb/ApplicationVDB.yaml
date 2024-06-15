@@ -27,7 +27,7 @@ schemaModels:
     dataMappings:
       # Here we map a translator with a datasource
       js_translator: "app_ds"
-    # The actual visible entity, defined using standard PostgresSQL.
+    # The actual visible entity, defined using standard PostgreSQL.
     # A hypothetical table that shows a summary of Kubling deployments
     ddl: |
       CREATE FOREIGN TABLE KUBLING_DEPLOYMENT

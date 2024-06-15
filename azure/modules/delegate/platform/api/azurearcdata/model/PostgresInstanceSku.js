@@ -22,7 +22,7 @@ import CommonSku from './CommonSku';
 class PostgresInstanceSku {
     /**
      * Constructs a new <code>PostgresInstanceSku</code>.
-     * The resource model definition representing SKU for Azure Database for PostgresSQL - Azure Arc
+     * The resource model definition representing SKU for Azure Database for PostgreSQL - Azure Arc
      * @alias module:model/PostgresInstanceSku
      * @implements module:model/CommonSku
      * @param name {String} The name of the SKU.  It is typically a letter+number code

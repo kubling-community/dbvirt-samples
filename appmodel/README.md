@@ -12,8 +12,8 @@ In this sample we introduce the "custom template function" feature that gives us
 custom functions that can be invoked when evaluating templates.
 Functions are bundled in a separate module file, for more info please see [the bundle info](modules/functions/bundle-function-info.yaml)
 
-## Using PostgresSQL as DB for JOIN info.
-In case you don't want to lose data when stopping the container, create a PostgresSQL container using the following command:
+## Using PostgreSQL as DB for JOIN info.
+In case you don't want to lose data when stopping the container, create a PostgreSQL container using the following command:
 ```
   docker run -d --name some-postgres \
     -e POSTGRES_PASSWORD=[PASSWORD] \
