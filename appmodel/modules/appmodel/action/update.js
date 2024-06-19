@@ -1,4 +1,4 @@
-import { updateGitHubRepo } from "/platforms/github/github_repo";
+import { updateGitHubRepo } from "../platforms/github/github_repo";
 
 print('Update operation received on TABLE: ' + updateOperation.table);
 

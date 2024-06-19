@@ -1,4 +1,4 @@
-import { deleteGitHubRepo } from "/platforms/github/github_repo";
+import { deleteGitHubRepo } from "../platforms/github/github_repo";
 
 print('Delete operation received on TABLE: ' + deleteOperation.table);
 

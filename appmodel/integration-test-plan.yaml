@@ -1,0 +1,42 @@
+#  Kubling modules, as any other JavaScript project, must be tested using the well-known standard:
+#  Unit tests, Integration tests and Functional tests.
+#  Unit tests are performed locally using 100% JavaScript while functional tests can be performed using containers, that is,
+#  within a build-chain that generates all modules and runs a local container (you can use the free CE), so you prototype a client
+#  to make all the necessary operations.
+#  Take into account that app-config and properties must be pointing to mock servers or upstream systems you use for testing.
+#
+#  However, integration tests are challenging since the only thing we need out of them is knowing whether a query executes
+#  or not, by analyzing results in the form of rows and columns and/or update counts when UPDATING or DELETING, without having
+#  to run a container, that is, in a lighter way.
+#
+#  That is why kdv offers the 'test' command which has a subcommand 'integration' that picks up the current file and
+#  executes a tiny workflow to prepare the context and call your integration test JavaScript files.
+
+descriptorModule:
+  directory: "./descriptor"
+
+mainModule:
+  directory: "./modules/appmodel"
+
+properties:
+  gitHubURL: "http://localhost:8643"
+  gitHubOrg: "demo"
+  gitHubPAT: "secure-pat"
+
+yamlObjects:
+  - name: "schemaModel"
+    definition:
+      properties:
+        azure_subscription: "subscription"
+
+mockServers:
+  - name: "kubernetes_1"
+    configFile: "./test/mock/github_server_expect.yaml"
+
+tests:
+  - name: "test1"
+    VDBName: "vdb"
+    schemaName: "gh"
+    ddlFilePath: "./test/github.ddl"
+    translatorConfigFilePath: "./descriptor/vdb/translator/base-translator-config.yaml"
+    scriptTestsFilePath: "./test/script/all_tests.js"

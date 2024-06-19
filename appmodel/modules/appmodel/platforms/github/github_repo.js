@@ -1,4 +1,4 @@
-import { isArrayEmpty, getFieldValue, isUndefinedOrNull, isNotUndefinedOrNull, incrementBasedOnAPIResponseOrFail } from "/utils/utils";
+import { isArrayEmpty, getFieldValue, isUndefinedOrNull, isNotUndefinedOrNull, incrementBasedOnAPIResponseOrFail } from "../../utils/utils";
 
 export function fetchGitHubRepos() {
 
