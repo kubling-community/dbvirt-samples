@@ -30,6 +30,10 @@ expectations:
     returnCode: 200
 
   - path: "/repos/octocat/Hello-World"
+    method: "PATCH"
+    returnCode: 200
+
+  - path: "/repos/octocat/Hello-World"
     method: "DELETE"
     returnCode: 204
 
