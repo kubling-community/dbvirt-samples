@@ -13,3 +13,6 @@
 /azure/modules/azure-module-bundle.zip
 /azure/azure-descriptor-bundle.zip
 /azure/modules/azure-sql-fn-parser-bundle.zip
+/appmodel/descriptor-mod.zip
+/appmodel/main-mod.zip
+/hibernate/springboot/target/

@@ -1,4 +1,4 @@
-import { isArrayEmpty, getFieldValue, isUndefinedOrNull, isNotUndefinedOrNull, incrementBasedOnAPIResponseOrFail } from "/utils/utils";
+import { isArrayEmpty, getFieldValue, isUndefinedOrNull, isNotUndefinedOrNull, incrementBasedOnAPIResponseOrFail } from "../../utils/utils";
 
 export function fetchGitHubRepos() {
 
@@ -17,7 +17,6 @@ export function fetchGitHubRepos() {
         }
     } else {
         for (let org of organizations) {
-            print(org);
             getReposByName(org, names).forEach((resultByName) => {
                 resultSet.addRow(JSON.stringify(resultByName));
             });
@@ -69,7 +68,6 @@ function invokeGitHubReposApiGet(org) {
 
     // Org is not returned by GitHub, since it is somehow implicit in the request, therefore we add it into the doc.
     docs = docs.map(d => addOrg(d, org));
-    print("DOCS >> " + JSON.stringify(docs));
     return docs;
 
 }
@@ -123,23 +121,6 @@ function invokeGitHubRepoApiGet(repoName) {
         return [];
     }
 
-}
-
-function transformToEntity(repo) {
-    if (isUndefinedOrNull(repo.name)) return null;
-    print(JSON.stringify(repo.owner));
-    return {
-        "org": contextVars.gitHubOrg,
-        "id": repo.id,
-        "node_id": repo.node_id,
-        "name": repo.name,
-        "full_name": repo.full_name,
-        "url": repo.html_url,
-        "description": repo.description,
-        "private": repo.private,
-        "visibility": repo.visibility,
-        "owner": JSON.stringify(repo.owner)
-    }
 }
 
 export function createGitHubRepo() {

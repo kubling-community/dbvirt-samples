@@ -1,4 +1,4 @@
-import { fetchGitHubRepos } from "/platforms/github/github_repo";
+import { fetchGitHubRepos } from "../platforms/github/github_repo";
 
 print('Query received:\n' + queryFilter.json);
 

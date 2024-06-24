@@ -61,5 +61,15 @@ Just run `psql -h <IP/HOSTNAME> -p 35432 -U <USERNAME> -d <VDB>`
 By default, `DBVirt` does not print out any internal log message to the console, leaving it clean for scripts.
 In case you need to add debug messages, just `print("My debug message");` from any script and get container's logs printed in the `stdout`.
 
+## `kdv` CLI tool
+`kdv` is released as a native executable (still in progress) and as a [OCI image published in DockerHub](https://hub.docker.com/r/kubling/dbvirt-cli/tags).<br>
+Usage:
+`docker run --rm -v [path/of/your/project]:[path/in/container] kubling/dbvirt-cli:latest [command] [subcommand] [params] [options]`
+
+Example:
+`docker run --rm -v /root/dbvirt-samples/:/dbvirt-samples/ kubling/dbvirt-cli:latest bundle genmod /dbvirt-samples/azure/modules/delegate -o /dbvirt-samples/azure/modules/delegate/azure-module-bundle.zip`
+
+For more information about available commands please [see this doc](docs/KDV.MD).
+
 ## Use `DBeaver` for testing
 `DBeaver` is our first option when testing things locally. [Please follow this steps](docs/DBeaver.md) to configure it in your environment.
