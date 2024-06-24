@@ -5,12 +5,15 @@ var tests = {
         assert.equals(2, result.size(), "rs.size");
         // __colSize is an internal member that returns the number of informed columns, even though it is available in all rows, number
         // will never differ
-        assert.equals(12, result.getFirst().__colSize, "col.size");
+        assert.equals(14, result.getFirst().__colSize, "col.size");
         // fields can be accesses as regular members
         assert.equals("3qeDnTSgNw2RpYEe0CaRcyNdRs3060106467010", result.get(0).identifier, "r1.identifier");
         assert.equals("ou5bglaKF9iCsRgvPJqx3484494085010", result.get(1).identifier, "r2.identifier");
         assert.equals("https://github.com/octocat/Hello-World", result.get(0).html_url, "r1.html_url");
         assert.equals("https://github.com/octocat/Kubling", result.get(1).html_url, "r2.html_url");
+
+        assert.equals("gh", result.get(0).schema, "r1.schema");
+        assert.equals("myprop", result.get(1).schemaProp, "r2.schemaProp");
 
         var owner = JSON.parse(result.get(0).owner);
         assert.equals("MDQ6VXNlcjE=", owner.node_id, "owner.node_id");

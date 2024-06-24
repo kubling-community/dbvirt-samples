@@ -19,16 +19,17 @@ properties:
 yamlObjects:
   - name: "schemaModel"
     definition:
+      name: "gh"
       properties:
-        azure_subscription: "subscription"
+        prop: "myprop"
 
 mockServers:
-  - name: "kubernetes_1"
+  - name: "github"
     configFile: "./test/mock/github_server_expect.yaml"
 
 tests:
   # Each entry here represents an integration test as a whole, not an individual test
-  - name: "test1"
+  - name: "GitHub"
     # VDB and Schema names can be defined here in a test context
     VDBName: "vdb"
     schemaName: "gh"
@@ -36,4 +37,4 @@ tests:
     # you can generate one only for testing and specify it
     ddlFilePath: "./test/github.ddl"
     translatorConfigFilePath: "./descriptor/vdb/translator/base-translator-config.yaml"
-    scriptTestsFilePath: "./test/script/all_tests.js"
+    scriptTestsFilePath: "./test/script/github_tests.js"
