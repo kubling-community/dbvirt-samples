@@ -44,15 +44,15 @@ Tables will be created in database `postgres`, schema `public`, which for this d
 Kubling modules, as any other JavaScript project, must be tested using the well-known standard: Unit tests, Integration tests and Functional tests.
 
 Unit tests are performed locally using 100% JavaScript while functional tests can be performed using containers, that is,
-within a build-chain that generates all modules and runs a local container (you can use the free CE), so you prototype a client
-to make all the necessary operations.
+within a build-chain that generates all modules and runs a local full-server container (you can use the free CE), so you only run a client
+to make all the necessary operations and verify results.
 Take into account that `app-config` and `properties` must be pointing to mock servers or upstream systems you use for testing.
 
 However, integration tests are challenging since the only thing we need out of them is knowing whether a query executes
 or not, by analyzing results in the form of rows and columns and/or update counts when INSERTING, UPDATING or DELETING, without having
-to initialize the whole server in a container, that is, in a lighter way.
+to initialize the whole server in a container, that is, in a lighter way, since we don't need, for example, `initializer`s, `RBAC` and the `scheduler`.
 
-That is why `kdv` offers the `test` command which has a subcommand `integration` that picks up the current file and
+That is why `kdv` offers the `test` command which has a subcommand `integration` that picks up a manifest file and
 executes a tiny workflow to prepare the context and call your integration test JavaScript files.
 
 `integration` subcommand has also the ability to start one or more mock servers, using same approach [followed here](https://github.com/kubling-community/dbvirt-mock-upstream), in fact
@@ -64,12 +64,14 @@ tests script](test/script/all_tests.js).
 Assuming that you cloned the repo in `~/dbvirt-samples`, just run:<br>
 ```docker run --rm -v $HOME/dbvirt-samples/:/dbvirt-samples kubling/dbvirt-cli:latest test integration /dbvirt-samples/appmodel/integration-test-plan.yaml```
 
-### 1. Generate bundle files
+### Run the server as in the rest of the samples
+
+#### 1. Generate bundle files
 Execute [the gen-bundle script](gen-bundles.sh) to generate the zip files.
 
-### 2. Follow the standard procedure explained in the rest of the examples
+#### 2. Follow the standard procedure explained in the rest of the examples
 
-### 3. Run container
+#### 3. Run container
 This sample works well with our Community Edition, just replace the environment variables and run:
 
 ```
@@ -97,23 +99,23 @@ docker run --rm \
     kubling/dbvirt-ce:latest
 ```
 
-### 4. Endpoints
+#### 4. Endpoints
 Once the container is running, use the following commands to start testing:
 
-#### Create a new app:
+##### Create a new app:
 * ```
   curl --location 'http://localhost:8282/api/v1/actions/run/new_app' \
     --header 'Content-Type: application/json' \
     --data '{ "app_name": "my-new-app" }'
   ```
-#### Get App Info:
+##### Get App Info:
 * ```
   curl --location 'http://localhost:8282/api/v1/query/perform/get_apps_full' \
     --header 'Content-Type: application/json' \
     --data '{ "app_name": "my-new-app" }'
   ```
   
-#### Add a component to the app a new app:
+##### Add a component to the app a new app:
 * ```
     curl --location 'http://localhost:8282/api/v1/actions/run/add_component' \
       --header 'Content-Type: application/json' \
@@ -131,7 +133,7 @@ That is because we first check that actually the repository does not exist alrea
 To fix it, comment [the following section](https://github.com/kubling-community/dbvirt-mock-upstream/blob/master/src/main/resources/github_server_expect.yaml#L46), regenerate the server and try again.
 Once the operation done, uncomment it, so we are able to fetch info.
 
-#### Deploy a component to Kubernetes:
+##### Deploy a component to Kubernetes:
 * ```
   curl --location 'http://localhost:8282/api/v1/actions/run/deploy_component' \
   --header 'Content-Type: application/json' \
@@ -165,7 +167,7 @@ The strategy followed in this example, is creating a namespace named after the `
 Therefore, you will need to adapt the mock server based on the namespace name. Go to [this file](https://github.com/kubling-community/dbvirt-mock-upstream/blob/master/src/main/resources/kubernetes_server_1_expect.yaml#L58) and replace the
 field selector by the component ID.
 
-#### Get last deploy transition (status):
+##### Get last deploy transition (status):
 * ```
   curl --location 'http://localhost:8282/api/v1/query/perform/get_app_component_deploy_last_transition' \
   --header 'Content-Type: application/json' \
@@ -175,6 +177,6 @@ field selector by the component ID.
   }'
   ```
 
-### 5. Queries
+#### 5. Queries
 At this point, we hope you're already familiar with queries, so we recommend trying queries with different complexity,
 as you were operating this company's IT/Cloud Infra. Enjoy! 
