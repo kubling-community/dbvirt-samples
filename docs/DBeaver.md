@@ -20,7 +20,7 @@ In the top menu, select `Database` > `Driver Manager` and then, in the popup win
 
 First click on `Libraries` tab and then `Add File`. Then select the recently-downloaded driver:
 
-![](driver_loc.png)
+![](img/driver_loc.png)
 
 Go back to `Settings` tab and give the driver a name, like `Kubling`.<br> 
 Fill the `Class name` field with `com.kubling.teiid.jdbc.TeiidDriver`.<br>
@@ -28,11 +28,11 @@ Leave all other fields blank and press `OK`.
 
 ### 4. Connect to VDB
 In the top toolbar, just below the main menu, click on `New Database Connection`.<br>
-![](new_db_conn.png)
+![](img/new_db_conn.png)
 
 Filter `Driver` by name:
 
-![](driver_selection.png)
+![](img/driver_selection.png)
 
 The connection string has the following components:<br>
 `jdbc:teiid:[vdb]@mm://[address]:[port]`

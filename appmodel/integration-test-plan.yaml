@@ -1,16 +1,4 @@
-#  Kubling modules, as any other JavaScript project, must be tested using the well-known standard:
-#  Unit tests, Integration tests and Functional tests.
-#  Unit tests are performed locally using 100% JavaScript while functional tests can be performed using containers, that is,
-#  within a build-chain that generates all modules and runs a local container (you can use the free CE), so you prototype a client
-#  to make all the necessary operations.
-#  Take into account that app-config and properties must be pointing to mock servers or upstream systems you use for testing.
-#
-#  However, integration tests are challenging since the only thing we need out of them is knowing whether a query executes
-#  or not, by analyzing results in the form of rows and columns and/or update counts when UPDATING or DELETING, without having
-#  to run a container, that is, in a lighter way.
-#
-#  That is why kdv offers the 'test' command which has a subcommand 'integration' that picks up the current file and
-#  executes a tiny workflow to prepare the context and call your integration test JavaScript files.
+## Please note that './' means relative to this file, not the location where kdv is running
 
 descriptorModule:
   directory: "./descriptor"
@@ -18,11 +6,16 @@ descriptorModule:
 mainModule:
   directory: "./modules/appmodel"
 
+# List here all needed properties, including environment variables and properties specified via file.
 properties:
   gitHubURL: "http://localhost:8643"
   gitHubOrg: "demo"
   gitHubPAT: "secure-pat"
 
+# Please note that, when running integration tests, the VDB configuration file included in the descriptor bundle is not
+# loaded, therefore, if any of your, for example, DDLs need to access the 'schemaModel' object it won't be available.
+# yamlObjects allows you to freely define Objects that are injected into those contexts so you don't have to adapt DDLs
+# only for testing
 yamlObjects:
   - name: "schemaModel"
     definition:
@@ -34,9 +27,13 @@ mockServers:
     configFile: "./test/mock/github_server_expect.yaml"
 
 tests:
+  # Each entry here represents an integration test as a whole, not an individual test
   - name: "test1"
+    # VDB and Schema names can be defined here in a test context
     VDBName: "vdb"
     schemaName: "gh"
+    # In case a DDL is defined as a block in the VDB YAML file, and since it is not ever loaded during integration tests
+    # you can generate one only for testing and specify it
     ddlFilePath: "./test/github.ddl"
     translatorConfigFilePath: "./descriptor/vdb/translator/base-translator-config.yaml"
     scriptTestsFilePath: "./test/script/all_tests.js"

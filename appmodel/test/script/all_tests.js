@@ -3,7 +3,7 @@ var tests = {
         var result = DBTest.executeQuery("SELECT * from CODE_REPO WHERE org = 'octocat'");
         // result is a list of rows
         assert.equals(2, result.size(), "rs.size");
-        // __colSize is an internal member that returns the number of informed columns, even though it is avaiable in all rows, number
+        // __colSize is an internal member that returns the number of informed columns, even though it is available in all rows, number
         // will never differ
         assert.equals(12, result.getFirst().__colSize, "col.size");
         // fields can be accesses as regular members
@@ -38,6 +38,7 @@ var tests = {
     }
 };
 
+// We recommend following this approach/structure in your tests so you don't have to write code to informing testReport
 Object.values(tests)
     .filter(f => typeof f === 'function')
     .forEach(f => {

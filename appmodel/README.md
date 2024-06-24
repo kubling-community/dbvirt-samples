@@ -40,6 +40,30 @@ Tables will be created in database `postgres`, schema `public`, which for this d
 
 ## How to test it
 
+### Run integration tests
+Kubling modules, as any other JavaScript project, must be tested using the well-known standard: Unit tests, Integration tests and Functional tests.
+
+Unit tests are performed locally using 100% JavaScript while functional tests can be performed using containers, that is,
+within a build-chain that generates all modules and runs a local container (you can use the free CE), so you prototype a client
+to make all the necessary operations.
+Take into account that `app-config` and `properties` must be pointing to mock servers or upstream systems you use for testing.
+
+However, integration tests are challenging since the only thing we need out of them is knowing whether a query executes
+or not, by analyzing results in the form of rows and columns and/or update counts when INSERTING, UPDATING or DELETING, without having
+to initialize the whole server in a container, that is, in a lighter way.
+
+That is why `kdv` offers the `test` command which has a subcommand `integration` that picks up the current file and
+executes a tiny workflow to prepare the context and call your integration test JavaScript files.
+
+`integration` subcommand has also the ability to start one or more mock servers, using same approach [followed here](https://github.com/kubling-community/dbvirt-mock-upstream), in fact
+it starts embedded servers.
+
+Please see the [test plan file](integration-test-plan.yaml) for more information, and also have a look at the [integration
+tests script](test/script/all_tests.js).
+
+Assuming that you cloned the repo in `~/dbvirt-samples`, just run:<br>
+```docker run --rm -v $HOME/dbvirt-samples/:/dbvirt-samples kubling/dbvirt-cli:latest test integration /dbvirt-samples/appmodel/integration-test-plan.yaml```
+
 ### 1. Generate bundle files
 Execute [the gen-bundle script](gen-bundles.sh) to generate the zip files.
 
