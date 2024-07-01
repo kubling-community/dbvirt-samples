@@ -59,7 +59,7 @@ executes a tiny workflow to prepare the context and call your integration test J
 it starts embedded servers.
 
 Please see the [test plan file](integration-test-plan.yaml) for more information, and also have a look at the [integration
-tests script](test/script/all_tests.js).
+tests script](test/script/github_tests.js).
 
 Assuming that you cloned the repo in `~/dbvirt-samples`, just run:<br>
 ```docker run --rm -v $HOME/dbvirt-samples/:/dbvirt-samples kubling/dbvirt-cli:latest test integration /dbvirt-samples/appmodel/integration-test-plan.yaml```
@@ -179,4 +179,4 @@ field selector by the component ID.
 
 #### 5. Queries
 At this point, we hope you're already familiar with queries, so we recommend trying queries with different complexity,
-as you were operating this company's IT/Cloud Infra. Enjoy! 
+as you were operating this company's IT/Cloud Infra. Enjoy!
