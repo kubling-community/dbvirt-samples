@@ -1,6 +1,6 @@
 CREATE FOREIGN TABLE STORAGE_ACCOUNT
    (
-        subscription string OPTIONS(val_constant '{{ schemaModel.properties.azure_subscription }}'),
+        subscription string OPTIONS(val_constant '{{ schema.properties.azure_subscription }}'),
         resourceGroup string OPTIONS(call_func 'az_sql_get_rg<id>'),
         sku json OPTIONS(parser_format 'asJsonPretty'),
         kind string,
@@ -17,11 +17,11 @@ CREATE FOREIGN TABLE STORAGE_ACCOUNT
    )
     OPTIONS(updatable true,
             supports_idempotency false,
-            tags 'azure;{{ schemaModel.properties.azure_subscription }};storage;account');
+            tags 'azure;{{ schema.properties.azure_subscription }};storage;account');
 
 CREATE FOREIGN TABLE STORAGE_ACCOUNT_PROPERTIES
    (
-        subscription string OPTIONS(val_constant '{{ schemaModel.properties.azure_subscription }}'),
+        subscription string OPTIONS(val_constant '{{ schema.properties.azure_subscription }}'),
         id string NOT NULL OPTIONS(synthetic_type 'parent'),
         provisioningState string,
         primaryEndpoints json OPTIONS(parser_format 'asJsonPretty'),
@@ -41,13 +41,13 @@ CREATE FOREIGN TABLE STORAGE_ACCOUNT_PROPERTIES
         UNIQUE(subscription, id)
    )
     OPTIONS(updatable false,
-            synthetic_parent '{{ schemaModel.name }}.STORAGE_ACCOUNT',
+            synthetic_parent '{{ schema.name }}.STORAGE_ACCOUNT',
             synthetic_path 'properties',
-            tags 'azure;{{ schemaModel.properties.azure_subscription }};storage;account;properties');
+            tags 'azure;{{ schema.properties.azure_subscription }};storage;account;properties');
 
 CREATE FOREIGN TABLE PSQL_SERVER
    (
-        subscription string OPTIONS(val_constant '{{ schemaModel.properties.azure_subscription }}'),
+        subscription string OPTIONS(val_constant '{{ schema.properties.azure_subscription }}'),
         resourceGroup string OPTIONS(call_func 'az_sql_get_rg<id>'),
         sku json OPTIONS(parser_format 'asJsonPretty'),
         "identity" string,
@@ -62,11 +62,11 @@ CREATE FOREIGN TABLE PSQL_SERVER
    )
     OPTIONS(updatable true,
             supports_idempotency false,
-            tags 'azure;{{ schemaModel.properties.azure_subscription }};postgresql');
+            tags 'azure;{{ schema.properties.azure_subscription }};postgresql');
 
 CREATE FOREIGN TABLE CONTAINER_REGISTRY
    (
-        subscription string OPTIONS(val_constant '{{ schemaModel.properties.azure_subscription }}'),
+        subscription string OPTIONS(val_constant '{{ schema.properties.azure_subscription }}'),
         resourceGroup string OPTIONS(call_func 'az_sql_get_rg<id>'),
         sku json OPTIONS(parser_format 'asJsonPretty'),
         "identity" string,
@@ -79,4 +79,4 @@ CREATE FOREIGN TABLE CONTAINER_REGISTRY
    )
     OPTIONS(updatable true,
             supports_idempotency false,
-            tags 'azure;{{ schemaModel.properties.azure_subscription }};postgresql');
+            tags 'azure;{{ schema.properties.azure_subscription }};postgresql');

@@ -11,7 +11,7 @@ CREATE FOREIGN TABLE DEPLOYMENT
     UNIQUE(clusterUrl, metadata__namespace, metadata__name))
 OPTIONS(updatable true,
         supports_idempotency false,
-        tags 'kubernetes;{{ schemaModel.properties.cluster_name }};deployment');
+        tags 'kubernetes;{{ schema.properties.cluster_name }};deployment');
 
 CREATE FOREIGN TABLE DEPLOYMENT_CONTAINER
    (clusterName string OPTIONS(val_variable 'cluster_name'),
@@ -28,10 +28,10 @@ CREATE FOREIGN TABLE DEPLOYMENT_CONTAINER
     PRIMARY KEY(identifier),
     UNIQUE(metadata__namespace, metadata__name, name))
   OPTIONS(updatable true,
-        synthetic_parent '{{ schemaModel.name }}.DEPLOYMENT',
+        synthetic_parent '{{ schema.name }}.DEPLOYMENT',
         synthetic_path 'spec__template__spec__containers',
         synthetic_allow_bulk_insert false,
-        tags 'kubernetes;{{ schemaModel.properties.cluster_name }};deployment_container');
+        tags 'kubernetes;{{ schema.properties.cluster_name }};deployment_container');
 
 CREATE FOREIGN TABLE DEPLOYMENT_CONTAINER_VOLS
    (clusterName string OPTIONS(val_variable 'cluster_name'),
@@ -49,7 +49,7 @@ CREATE FOREIGN TABLE DEPLOYMENT_CONTAINER_VOLS
     PRIMARY KEY(identifier),
     UNIQUE(metadata__namespace, metadata__name, containerName, name))
   OPTIONS(updatable true,
-        synthetic_parent '{{ schemaModel.name }}.DEPLOYMENT_CONTAINER',
+        synthetic_parent '{{ schema.name }}.DEPLOYMENT_CONTAINER',
         synthetic_path 'volumeMounts',
         synthetic_allow_bulk_insert false,
-        tags 'kubernetes;{{ schemaModel.properties.cluster_name }};deployment_container_vols');
+        tags 'kubernetes;{{ schema.properties.cluster_name }};deployment_container_vols');

@@ -2,8 +2,8 @@ CREATE FOREIGN TABLE CODE_REPO
 (
       identifier string OPTIONS(val_pk 'org+name' ),
       org string not null,
-      schema string OPTIONS(val_constant '{{ schemaModel.name }}'),
-      schemaProp string OPTIONS(val_constant '{{ schemaModel.properties.prop }}'),
+      schema string OPTIONS(val_constant '{{ schema.name }}'),
+      schemaProp string OPTIONS(val_constant '{{ schema.properties.prop }}'),
       owner__login string,
       id integer,
       node_id string,
