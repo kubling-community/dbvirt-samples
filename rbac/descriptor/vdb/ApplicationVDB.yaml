@@ -2,26 +2,18 @@
 name: "Application"
 version: "1"
 
-dataSourceModels:
-  - name: "app_ds"
+dataSources:
+  - name: "app"
     dataSourceType: "SCRIPT_JS"
     config: "bundle:scripting/js-config.yaml"
-
-translatorModels:
-  - name: "js_translator"
-    dataSourceType: "SCRIPT_JS"
-    config: "bundle:translator/js-translator.yaml"
-
-schemaModels:
-  - name: "app"
-    type: "PHYSICAL"
-    dataMappings:
-      js_translator: "app_ds"
-    ddl: |      
-      CREATE FOREIGN TABLE KUBLING_DEPLOYMENT
-                (name string primary key, readiness string, state string, age integer, replicas integer, message string)
-            OPTIONS(updatable true);
-      CREATE FOREIGN TABLE NESTED_OBJECT (my__field string, my__nested_field string) OPTIONS(updatable true);
+    translatorConfig: "bundle:translator/js-translator.yaml"
+    schema:
+      type: "PHYSICAL"
+      ddl: |
+        CREATE FOREIGN TABLE KUBLING_DEPLOYMENT
+                  (name string primary key, readiness string, state string, age integer, replicas integer, message string)
+              OPTIONS(updatable true);
+        CREATE FOREIGN TABLE NESTED_OBJECT (my__field string, my__nested_field string) OPTIONS(updatable true);
 
 rbacDataRoles:
   - name: "full_control"
