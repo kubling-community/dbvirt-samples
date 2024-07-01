@@ -49,8 +49,11 @@ and then do: <br> `effort(ms) = total_time - printed_time`.
 
 ## The kdv CLI tool
 The [bundle generator](gen-bundles.sh) of this sample does not create the json module bundle using the standard `zip` command,
-instead it uses the `kdv` binary located in the [root of the repo](../kdv).
-To understand what it does, it is important to note that the engine does not use the underlying OS's filesystem to get JavaScript
+instead it uses the `kdv` CLI tool.<br>
+`kdv` is distributed as an OCI image, in order to make it as standard as possible, the bundle generator uses `Docker`, but you can
+use any compatible container runtime of your preference.
+
+To understand what `kdv` does, it is important to note that the engine does not use the underlying OS's filesystem to get JavaScript
 files, since everything is cached in memory and pre-parsed during engine initialization.
 
 Therefore, paths used for loading resources do not refer to a regular file path in the host machine, but a full path

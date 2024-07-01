@@ -1,4 +1,4 @@
 #!/bin/bash
 rm -f azure-descriptor-bundle.zip; cd descriptor; zip -r ../azure-descriptor-bundle.zip *;cd ..
-../kdv bundle genmod $(pwd)/modules/delegate/ -o $(pwd)/modules/azure-module-bundle.zip
-../kdv bundle genmod $(pwd)/modules/parser/ -o $(pwd)/modules/azure-sql-fn-parser-bundle.zip
+docker run --rm -v $(pwd)/modules/:/modules/ kubling/dbvirt-cli:latest bundle genmod /modules/delegate -o /modules/azure-module-bundle.zip
+docker run --rm -v $(pwd)/modules/:/modules/ kubling/dbvirt-cli:latest bundle genmod /modules/parser -o /modules/azure-sql-fn-parser-bundle.zip
