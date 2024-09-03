@@ -1,0 +1,11 @@
+---
+name: "EmptyVDB"
+version: "1"
+
+dataSources: []
+translatorModels: []
+schemaModels: []
+aggregatorSchemaModels: []
+absolutePathInBundle: vdb
+rbacDataRoles: []
+

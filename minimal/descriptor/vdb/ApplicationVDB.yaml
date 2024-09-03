@@ -10,7 +10,7 @@ version: "1"
 dataSources:
 
   - name: "app_ds"
-    dataSourceType: "SCRIPT_JS"
+    dataSourceType: "SCRIPT_DOCUMENT_JS"
     # 'bundle:' scheme indicates that the resource is in this bundle file and is relative to this vdb config directory!
     config: "bundle:scripting/js-config.yaml"
     # Translators define the allowed behaviour of operations on entities. Please see translator config file.

@@ -13,11 +13,11 @@ properties:
   gitHubPAT: "secure-pat"
 
 # Please note that, when running integration tests, the VDB configuration file included in the descriptor bundle is not
-# loaded, therefore, if any of your, for example, DDLs need to access the 'schemaModel' object it won't be available.
+# loaded, therefore, if any of your, for example, DDLs need to access the 'schema' object it won't be available.
 # yamlObjects allows you to freely define Objects that are injected into those contexts so you don't have to adapt DDLs
 # only for testing
 yamlObjects:
-  - name: "schemaModel"
+  - name: "schema"
     definition:
       name: "gh"
       properties:

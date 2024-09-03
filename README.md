@@ -7,6 +7,22 @@ Kubling Data Source Virtualization (or DBVirt) is a virtual-schemafull database 
 DBVirt follows CI/CD and DevOps principles, that is, the engine loads definition and configurations dynamically from a released bundle file which,
 in turn, can define other dependencies as JavaScript modules.
 
+## 5-seconds setup
+**Starting from version `24.5`**, the engine comes with an embedded web console and a restart endpoint, created to make quick tests easier.
+By default, they are disabled, but can be enabled using an environment variable.
+
+Assuming that you cloned the repo in `~/dbvirt-samples`, just run:
+```
+docker run --rm \ 
+    -e ENABLE_WEB_CONSOLE=true \ 
+    -p 35432:35432 -p 8282:8282 \
+    -e DESCRIPTOR_BUNDLE=/dbvirt-samples/empty/empty-descriptor-bundle.zip \
+    -e APP_CONFIG=/dbvirt-samples/empty/app-config.yaml \ 
+    kubling/dbvirt-ce:latest
+```
+
+Then open your browser and go to `http://localhost:8282/console`
+
 ## Motivation
 While working on a platform for containerized workloads, we realized that the proliferation of tools would bring a lot of complexity to our platform's model
 if we wanted to support them all.
@@ -31,6 +47,7 @@ fetched from, for example, Kubernetes on-prem, AKS and Docker containers running
 ## Organization of the samples
 | Directory             | Goal                                                                                                                                                                                                                      |
 |:----------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| empty                 | An empty descriptor, with no data sources, useful only when testing via web console.                                                                                                                                      |
 | minimal               | A really simple example in which we create a Virtual Database with a single virtual entity.                                                                                                                               |
 | RBAC                  | Similar to the minimal example but with a really small custom authentication/authorization script.                                                                                                                        |
 | initializer/scheduler | Explores how to use initialization script and scheduler                                                                                                                                                                   |

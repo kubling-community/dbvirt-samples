@@ -1,3 +1,8 @@
+name: azure
+version: samples-1
+description: |
+  Azure module used only in samples.
+
 initScript:
   scriptFilePath: "init/init_azure_token.js"
 scheduledScripts:
