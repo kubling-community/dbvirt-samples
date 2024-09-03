@@ -13,11 +13,12 @@ By default, they are disabled, but can be enabled using an environment variable.
 
 Assuming that you cloned the repo in `~/dbvirt-samples`, just run:
 ```
-docker run --rm \ 
-    -e ENABLE_WEB_CONSOLE=true \ 
+docker run --rm \
+    -e ENABLE_WEB_CONSOLE=true \
     -p 35432:35432 -p 8282:8282 \
     -e DESCRIPTOR_BUNDLE=/dbvirt-samples/empty/empty-descriptor-bundle.zip \
-    -e APP_CONFIG=/dbvirt-samples/empty/app-config.yaml \ 
+    -e APP_CONFIG=/dbvirt-samples/empty/app-config.yaml \
+    -v ~/dbvirt-samples:/dbvirt-samples \
     kubling/dbvirt-ce:latest
 ```
 
