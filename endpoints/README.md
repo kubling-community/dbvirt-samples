@@ -6,11 +6,8 @@ Goal
 Difficulty
 : Medium
 
-## What are *endpoints* in DBVirt?
-Although SQL is an old and very simple language, that anyone can learn in days, DBVirt was originally created to 
-serve other systems, not final users. However, it is not common nowadays to write applications that interact with 
-Databases using plain SQL queries, reason why we needed to incorporate a mechanism, using a similar way for defining
-virtual databases, that allows to expose HTTP *endpoints* to interact with VDBs, schemas and entities.
+## What are *endpoints* in Kubling?
+Please see latest [official documentation.](https://docs.kubling.com/Engine/endpoints)
 
 Endpoints are divided into types: Queries and Actions.
 
@@ -18,29 +15,7 @@ Endpoints are divided into types: Queries and Actions.
 Allow to dynamically expose services that return a collection of rows using a SQL query.
 
 ### Actions
-*Actions* need a special explanation. The idea behind actions is to define a series of chained operations performed over other
-systems usually represented as entities of a VDB.
-
-In other words, an *action* is the representation of required operations for a desired **upstream** state.
-
-The concept around *desired* is very important since a Virtual Database is often composed by entities that represent
-interfaces with multiple other systems (upstream), therefore controlling the inner state of those upstream systems depend on
-APIs that are not always transactional, like in Kubernetes.
-
-However, an entity defined in DBVirt must be **consistent**, that is, if we `INSERT`, `UPDATE` or `DELETE` a row, the (atomic) operation
-will perform other operations on the dependant system and assuming that the system will eventually do what we request,
-an `INSERT` on the entity will return the current upstream state (consistency).
-
-## Built-in Kubernetes Translator
-DBVirt comes with a lightweight built-in and statically compiled Kubernetes module this sample uses, therefore it is not necessary to build
-a JavaScript module from scratch.
-
-We don't plan to keep adding built-in modules, since we believe that could make the engine less flexible and difficult
-to maintain (each change in the upstream API would force us to release a new version, whereas a JavaScript module can be easily fixed and
-released without having to wait for us).
-
-However, Kubernetes is an exception since this product was originally created to federate Kubernetes clusters and to
-interact with them using plain-old SQL queries, therefore we decided to keep the original module embedded and maintained by us.
+The purpose of actions is to define a sequence of operations that are performed across other systems, typically represented as entities within a VDB. In essence, an action represents the required operations to achieve a desired upstream state, using Kubling SQL queries.
 
 ## How to test it
 

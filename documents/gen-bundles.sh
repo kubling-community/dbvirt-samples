@@ -1,3 +1,3 @@
 #!/bin/bash
-rm -f documents-descriptor-bundle.zip; cd descriptor; zip -r ../documents-descriptor-bundle.zip *
-cd ../modules; rm -f documents-module-bundle.zip; cd doc; zip -r ../documents-module-bundle.zip *
+docker run --rm -v $(pwd):/base kubling/dbvirt-cli:latest bundle genmod /base/descriptor -o /base/documents-descriptor-bundle.zip --parse
+docker run --rm -v $(pwd)/modules:/modules kubling/dbvirt-cli:latest bundle genmod /modules/doc -o /modules/documents-module-bundle.zip --parse

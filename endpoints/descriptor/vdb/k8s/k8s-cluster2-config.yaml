@@ -1,1 +1,2 @@
 masterUrl: "{{ kubernetes_cluster_2_api_url }}"
+blankNamespaceStrategy: ALL

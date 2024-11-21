@@ -1,5 +1,7 @@
 import { isArrayEmpty, getFieldValue, isUndefinedOrNull, isNotUndefinedOrNull, incrementBasedOnAPIResponseOrFail } from "../../utils/utils";
 
+const ctx = 'APP_MODEL.GitHub';
+
 export function fetchGitHubRepos() {
 
     let qFilter = JSON.parse(queryFilter.json);
@@ -165,7 +167,7 @@ export function updateGitHubRepo() {
         repoData.org = fullDoc.org;
         repoData.name = fullDoc.name;
 
-        print("New Doc >>\n" + JSON.stringify(repoData));
+        logger.debug(ctx, "New Doc >>\n" + JSON.stringify(repoData));
 
         let req = {
            "url": `${contextVars.gitHubURL}/repos/${repoData.org}/${repoData.name}`,

@@ -2,10 +2,8 @@
 
 [![Kubling license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square)](LICENSE)
 
-Kubling Data Source Virtualization (or DBVirt) is a virtual-schemafull database engine that delegates the data fetch and feeding to custom Javascript modules, meaning better flexibility by removing dependencies on vendor-provided connectors.
-
-DBVirt follows CI/CD and DevOps principles, that is, the engine loads definition and configurations dynamically from a released bundle file which,
-in turn, can define other dependencies as JavaScript modules.
+Kubling Data Source Virtualization (or DBVirt) is a virtual-schemafull database engine that delegates the data fetch 
+and feeding to custom Javascript modules, meaning better flexibility by removing dependencies on vendor-provided connectors.
 
 ## 5-seconds setup
 **Starting from version `24.5`**, the engine comes with an embedded web console and a restart endpoint, created to make quick tests easier.

@@ -1,4 +1,4 @@
-import { toJsonPathFieldName, toJsonPathFieldOperation } from "/utils/utils";
+import { toJsonPathFieldName, toJsonPathFieldOperation } from "../../utils/utils";
 
 export function fetchDeployments() {
 

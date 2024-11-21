@@ -1,3 +1,7 @@
+import { logIt } from "./audit_auth";
+
+logIt(auth.userName);
+
 // In this case we assume that the user name matches with the only principal associated to the subject.
 // The subject is the entity that initiated the connection request, which may have multiple
 // identities within an organization. Each identity is informed as a Principal, which are the identifiers propagated

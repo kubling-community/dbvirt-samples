@@ -1,147 +1,130 @@
 # Documents Sample
 
 Goal
-: Learn how to deal with complex nested documents, and how to decide whether DBVirt can help.
+: Learn how to deal with complex nested documents, and how to decide whether Kubling can help.
 
 Difficulty
 : Medium
 
-## Schema-and-tuple-based design in an industry dominated by interfaces that exchange documents? Why?
-DBVirt is not meant to replace any system's API. However, there is a clear tendency to adapt organizations to systems and cloud providers,
-and not the other way around, that is making DevOps operations and especially Application development really hard and sometimes confusing.
+## Schema-and-Tuple-Based Design in an Industry Dominated by Document-Based Interfaces—Why?
 
-Most organizations have decided to throw away their internal IT/Cloud operation model, in favor of a set of specific tools,
-that developers can't access directly for "security reasons". Not surprising.
+Kubling is not meant to replace any system's API. However, there is a clear tendency to adapt organizations to 
+systems and cloud providers, rather than the other way around. This makes DevOps operations —and especially 
+application development— challenging and often confusing.
 
-Kubernetes is a good example, since instead of discussing how to migrate to containerized workloads, most organizations invested
-time and energy just implementing Kubernetes as a tool, without a clear definition/direction of what it really implies and how to
-prepare the whole ecosystem to operate on it.
+Most organizations have chosen to discard their internal IT/Cloud operation models in favor of specific tools 
+that developers cannot access directly due to "security reasons". Not surprising.
 
-DBVirt's mission is to isolate system's upstream complexity as much as possible, by defining concepts (entities) that are, more or less, universal,
-like Code Repository, Artifact Repository, Container Image, Container Instance (run), Metric, Log Entry, etc., and making them operate in a consistent way
-beyond simply provisioning.
+A good example is Kubernetes. Instead of discussing how to migrate to containerized workloads, many organizations 
+have invested time and energy in implementing Kubernetes as a tool — without a clear definition of what it truly 
+implies or how to prepare their ecosystem to operate on it.
 
-In our context, consistency means relationships, for example, a Container Instance is related to an image, which is hosted in an Artifact Repository
-and built using some resources hosted in a Code Repository. Without a proper schema, it is difficult to be able to define
-that level of traceability that, once done, make the whole IT/Cloud/Sec operation much easier.
+Kubling's mission is to isolate upstream system complexity as much as possible by defining universal 
+concepts (entities) such as Code Repository, Artifact Repository, Container Image, Container Instance (run), 
+Metric, and Log Entry. These concepts are made to operate consistently beyond simple provisioning.
 
-Having said that, DBVirt is only an abstraction layer, a facade, which knows nothing about how to interact with specific
-implementations, for example GitHub as Code Repository and Kubernetes as a container orchestrator. That knowledge is mostly
-loaded dynamically by the engine in the form of JavaScript modules.
+### Consistency and Traceability
+
+Consistency in our context means relationships. For example:
+- A Container Instance relates to an Image hosted in an Artifact Repository.
+- That Image is built using resources hosted in a Code Repository.
+
+Without a proper schema, defining this level of traceability is difficult. Once established, it simplifies IT/Cloud/Security 
+operations significantly.
+
+Kubling serves as an abstraction layer —a facade— that knows nothing about interacting with specific implementations 
+like GitHub (as a Code Repository) or Kubernetes (as a container orchestrator). This knowledge is dynamically loaded 
+into the engine as JavaScript modules.
 
 ## The problem of arrays in JSON and YAML Documents
-When acting as a facade, DBVirt needs to transform JSON-based documents exchanged with other systems via their APIs,
-into tuples. Flattening a JSON document is not hard, but capturing essential information (for operational reasons)
-could be challenging, especially when dealing with complex response documents that have important sections that are dynamic (arrays).
+When acting as a facade, Kubling transforms JSON-based documents exchanged with other systems via their APIs into tuples. 
+Flattening a JSON document is straightforward, but capturing essential information for operational purposes can be challenging, 
+particularly when dealing with dynamic array sections in complex response documents.
 
-Let's use a Kubernetes `Deployment` as an example. `Deployment` can define several `containers` (under `spec.template.spec.containers`).
-Suppose that we need to get a `Deployment` that has 2 containers. 
-If we flatten that document as-is, DBVirt will end up showing something like this:<br/>
-`spec.template.spec.containers[0].image`, `spec.template.spec.containers[1].image`, etc.<br/>
-Which crashes with the very definition of schema, that forces us to list fields during the entity's definition.
+### Example: Kubernetes Deployment
+Kubernetes `Deployment` documents can define multiple `containers` under `spec.template.spec.containers`. 
+Suppose we need to retrieve a `Deployment` with two containers. Flattening the document as-is results in:
+```text
+spec.template.spec.containers[0].image
+spec.template.spec.containers[1].image
+```
+This clashes with schema definitions, which require explicitly listed fields during entity definitions.
 
 ### Approaches
-This sample is about dealing with arrays using two different approaches:
+To address arrays, we offer two approaches:
 1. Embed sections of the document into a field.
-2. Create a new synthetic entity that models the information contained in the nested document, for example `DEPLOYMENT_CONTAINER`.
+2. Create a new synthetic entity that models the information contained in the nested document, e.g., `DEPLOYMENT_CONTAINER`.
 
 ### Synthetic Entities
-They exist only in the context of a `schema` and have no match in any of the underlying systems. As explained above,
-their purpose is to make it easier to deal with arrays in documents. 
+Synthetic entities exist only within a `schema` and have no counterpart in the underlying systems. 
+Their purpose is to simplify dealing with arrays in documents.
 
 ### Directives
-Options added to fields and entities that instruct the engine the role they play when operating (Select, Insert and Update).<br/>
-Directives are passed as `OPTIONS` which are lists of key-value pairs. List of synthetic-related directives as follows:
-
-| Directive                     | Level  | Type    | Options                      | Description                                                                                                                                                                                                       |
-|-------------------------------|--------|---------|------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `synthetic_parent`            | entity | String  | Any                          | Parent entity. Must include schema name.                                                                                                                                                                          |
-| `synthetic_path`              | entity | String  | Any                          | Name of the parent entity field (array) used to ungroup the content                                                                                                                                               |
-| `synthetic_allow_bulk_insert` | entity | Boolean | True/False                   | Indicates whether an INSERT operation tolerates multiple entries in the `synthetic_path` or must be strictly one.                                                                                                 |
-| `synthetic_type`              | field  | String  | `parent`, `parent_array_key` | Type of synthetic field.<br/>`parent` indicates that exists in and is connected to the parent entity.<br/>`parent_array_key` indicates that the field is used to locate specific elements within `synthetic_path` |
-| `synthetic_parent_field`      | field  | String  | Any                          | Indicates that the related parent field name is not the same as defined in the synthetic entity field. Used mostly when field names overlap.                                                                      |
+Directives are options added to fields and entities that guide their behavior during operations (Select, Insert, and Update). 
+These are passed as `OPTIONS`, which are key-value pairs. Below is a list of synthetic-related directives:
 
 Please see [this diagram](../diagrams/synthetic_directives.svg)
 
-A non-synthetic-related directive worth mentioning:
+For more information about options and directives, please see [official documentation.](https://docs.kubling.com/Engine/DDL#options).
 
-| Directive              | Level  | Type    | Options    | Description                                                                                                                                                                                                           |
-|------------------------|--------|---------|------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `supports_idempotency` | entity | Boolean | True/False | Indicates whether the upstream API supports idempotency.<br/>When `false` the engine verifies whether the operation changed the original record/document before applying.<br/>If omitted, the default value is `true` |
+## `SCRIPT_DOCUMENT_JS` Data Source Type
+
+One key feature to explore is Kubling's ability to abstract the complexity of document handling, particularly for JSON and YAML.
+
+The `SCRIPT_DOCUMENT_JS` data source type signals to the engine that pre-processing is required for queries involving 
+synthetic entities. The engine performs **group** and **ungroup** operations internally:
+
+1. **Group**: The engine walks through the synthetic entity lineage to the first non-synthetic entity and calls the `resultset` JavaScript delegate.
+2. **Ungroup**: It returns to the lineage and applies ungrouping based on the `synthetic_path`.
+
+For the `resultset` script, your JavaScript operates as in the `SCRIPT_JS` delegation. Synthetic entities can have other synthetic entities as parents, creating a lineage.
+
+### Operations: INSERT, UPDATE, DELETE
+
+Operations (`INSERT`, `UPDATE`, `DELETE`) behave differently with synthetic entities, as described below.
+
+#### INSERT
+
+Adds a new element in the parent `synthetic_path` array.
+
+| Member/Func | Type               | Description                        |
+|-------------|--------------------|------------------------------------|
+| table       | String             | Parent non-synthetic table name    |
+| fieldValues | List<SetOperation> | Field/value pairs in the operation |
+| jsonList    | List<String>       | JSON documents to insert           |
+| yamlList    | List<String>       | YAML documents to insert           |
+
+#### UPDATE
+
+Replaces values in an existing node.
+
+| Member/Func      | Type                 | Description                                                             |
+|------------------|----------------------|-------------------------------------------------------------------------|
+| table            | String               | Parent non-synthetic table name                                         |
+| updates          | List<SetOperation>   | Field/value pairs in the operation                                      |
+| queryFilter      | QueryFilter          | Filter, sort, and pagination information                                |
+| jsonList         | List<String>         | JSON documents with updates                                             |
+| yamlList         | List<String>         | YAML documents with updates                                             |
+| originalJsonList | List<String>         | Original document in JSON format before changes                         |
+| differences      | JsonDifferenceResult | Delta between the original and updated documents for easier processing. |
+
+#### DELETE
+
+Removes a node from the document.
+
+| Member/Func | Type         | Description                       |
+|-------------|--------------|-----------------------------------|
+| table       | String       | Parent non-synthetic table name   |
+| queryFilter | QueryFilter  | Filter, sort, and pagination info |
+| jsonList    | List<String> | JSON documents for deletion       |
 
 
-## `SCRIPT_DOCUMENT_JS` data source type
-The most important feature of this sample we would like you to explore, is what DBVirt offers in terms of abstracting the
-complexity of dealing with documents (mostly Json and YAML).<br/>
-`SCRIPT_DOCUMENT_JS` is a `dataSourceType` which indicates the engine that some pre-work must be done on queries in case
-of they are performed over synthetic entities.
+## JavaScript Side
 
-In order to simplify it, engine makes two internal operations called group and ungroup, that is, when querying a synthetic
-entity, DBVirt walks through its lineage up to the first non-synthetic entity, then it calls the `resultset` JavaScript
-delegate and goes back again to the lineage making the ungroup operation based on `synthetic_path` value.
+For synthetic entities, scripts receive full documents (as returned by the `resultset` script). 
+Operations like `INSERT`, `UPDATE`, and `DELETE` use these full documents for processing.
 
-As you can see, from the `resultset` standpoint of view, your JavaScript works as the regular `SCRIPT_JS` delegation.
-
-We use the term lineage since synthetic entity can have another synthetic entity as parent, as shown in this sample (`DEPLOYMENT_CONTAINER_VOLS` entity)
-
-However, `INSERT`, `UPDATE` and `DELETE` operations work differently on synthetic entities, as described below.
-
-Operation objects injected in the JS context has members and functions that make it easier to identify what is received.
-
-### INSERT
-An `INSERT` on a synthetic entity means that a new element in the parent `synthetic_path` array must be added.
-The engine will create a new element based on fields values that **do not have any associated `synthetic_type`** which in turn
-will be used to walk through the lineage and identify the node of the document where to insert the element.
-
-#### `insertOperation` context object
-
-| Member/Func      | Type               | Description                                           |
-|------------------|--------------------|-------------------------------------------------------|
-| table            | String             | Parent non-synthetic table name                       |
-| fieldValues      | List<SetOperation> | List of field/value pairs enumerated in the operation |
-| jsonList         | List<String>       | List of Documents to be inserted in Json format.      |
-| yamlList         | List               | List of Documents to be inserted in YAML format.      |
-
-Please note that `jsonList` and `yamlList` return a Document created based on `fieldValues`, which in some cases is not
-the final document and some construction is necessary in the script.
-
-### UPDATE
-Similar to `INSERT` but instead of adding a new element (node), values defined in the `SET` section will be used to replace on
-an existing node.
-
-#### `updateOperation` context object
-
-| Member/Func       | Type                  | Description                                                                                                                                                                        |
-|-------------------|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| table             | String                | Parent non-synthetic table name                                                                                                                                                    |
-| updates           | List<SetOperation>    | List of field/value pairs enumerated in the operation                                                                                                                              |
-| queryFilter       | QueryFilter           | Information of filters, sort and pagination.                                                                                                                                       |
-| jsonList          | List<String>          | List of Documents to be inserted in Json format.                                                                                                                                   |
-| yamlList          | List<String>          | List of Documents to be inserted in YAML format.                                                                                                                                   |
-| originalJsonList  | List<String>          | The document BEFORE changes as returned by the resultset script.                                                                                                                   |
-| originalYamlList  | List<String>          | Same as originalJsonList but in YAML format.                                                                                                                                       |
-| differences       | JsonDifferenceResult  | Indicates the changes made to the original document, in an much more code-friendly format, by computing a delta operation between each pair. Please see code sample for more info. |
-
-### DELETE
-Same as `INSERT` but, once the node identified, it is removed from the document.
-
-#### `deleteOperation` context object
-
-| Member/Func      | Type         | Description                                      |
-|------------------|--------------|--------------------------------------------------|
-| table            | String       | Parent non-synthetic table name                  |
-| queryFilter      | QueryFilter  | Information of filters, sort and pagination.     |
-| jsonList         | List<String> | List of Documents to be inserted in Json format. |
-| yamlList         | List         | List of Documents to be inserted in YAML format. |
-
-## JavaScript side
-What scripts receive when working with Documents is slightly different from delegation scripts. Operations performed on
-synthetic entity receive _full documents_ instead of only a portion.
-
-_Full document_ means the one returned by `resultset` script which is always called when `INSERT`, `UPDATE` and `DELETE`
-on synthetics are performed as explained earlier.
-
-Please explore [samples code](modules/doc/action) to see a general idea of how it works.
+See [sample code](modules/doc/action) for examples of how this works.
 
 ## How to test it
 

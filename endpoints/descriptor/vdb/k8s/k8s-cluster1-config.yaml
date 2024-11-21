@@ -2,3 +2,4 @@
 # context and use the following property instead of masterUrl
 #configFile:
 masterUrl: "{{ kubernetes_cluster_1_api_url }}"
+blankNamespaceStrategy: ALL

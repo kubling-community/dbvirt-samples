@@ -18,3 +18,7 @@ resultSetScript:
 
 insertScript:
   scriptFilePath: "action/insert.js"
+deleteScript:
+  scriptFilePath: "action/delete.js"
+updateScript:
+  scriptFilePath: "action/update.js"

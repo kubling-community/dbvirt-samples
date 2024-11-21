@@ -1,4 +1,4 @@
-import { updateDeployments } from "/platforms/kubernetes/deployment";
+import { updateDeployments } from "../platforms/kubernetes/deployment";
 
 print('Update operation received on TABLE: ' + updateOperation.table);
 
@@ -6,18 +6,18 @@ var docPos = 0;
 updateOperation.differences.forEach(function(diffResult) {
 
     if (!diffResult.modified.isEmpty()) {
-        print(diffResult.modified.stringify());
-        print('DOC >>> ' + updateOperation.jsonList.array()[docPos]);
-        print('MOD >>> ' + diffResult.modified.array()[0]);
-        print('JSONPath >>> ' + diffResult.modified.array()[0] + ' RETURNED ' +
+        logger.debug(diffResult.modified.stringify());
+        logger.debug('DOC >>> ' + updateOperation.jsonList.array()[docPos]);
+        logger.debug('MOD >>> ' + diffResult.modified.array()[0]);
+        logger.debug('JSONPath >>> ' + diffResult.modified.array()[0] + ' RETURNED ' +
             helper.jsonPath().read(updateOperation.jsonList.array()[docPos], diffResult.modified.array()[0]).stringify());
     }
 
     if (!diffResult.removed.isEmpty())
-        print('REMOVED >>> ' + diffResult.removed.stringify());
+        logger.debug('REMOVED >>> ' + diffResult.removed.stringify());
 
     if (!diffResult.untouched.isEmpty())
-        print('UNTOUCHED >>> ' + diffResult.untouched.stringify());
+        logger.debug('UNTOUCHED >>> ' + diffResult.untouched.stringify());
 
     docPos++;
 });

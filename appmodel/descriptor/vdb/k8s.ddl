@@ -6,7 +6,7 @@ CREATE FOREIGN TABLE NAMESPACE
     metadata__labels json OPTIONS(parser_format 'asJsonPretty'),
     status__phase string,
     PRIMARY KEY(metadata__name),
-    UNIQUE(clusterUrl, metadata__name))
+    UNIQUE(clusterName, metadata__name))
 OPTIONS(updatable true,
         supports_idempotency false,
         tags 'kubernetes;{{ schema.properties.cluster_name }};namespace');
@@ -28,7 +28,7 @@ CREATE FOREIGN TABLE DEPLOYMENT
     status__updatedReplicas integer,
     identifier string NOT NULL OPTIONS(val_pk 'clusterName+metadata__namespace+metadata__name' ),
     PRIMARY KEY(identifier),
-    UNIQUE(clusterUrl, metadata__namespace, metadata__name))
+    UNIQUE(clusterName, metadata__namespace, metadata__name))
 OPTIONS(updatable true,
         supports_idempotency false,
         tags 'kubernetes;{{ schema.properties.cluster_name }};deployment');

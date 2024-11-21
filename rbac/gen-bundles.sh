@@ -1,2 +1,2 @@
 #!/bin/bash
-rm -f rbac-descriptor-bundle.zip; cd descriptor; zip -r ../rbac-descriptor-bundle.zip *
+docker run --rm -v $(pwd):/base kubling/dbvirt-cli:latest bundle genmod /base/descriptor -o /base/rbac-descriptor-bundle.zip --parse
