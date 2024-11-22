@@ -1,6 +1,6 @@
 {% set vdb = "App" %}
-{% set componentName = get_k8s_component_info(_context.vdb, _context.component_id) %}
-{% set clusterSchema = find_best_cluster_for_deploy(_context.vdb, _context.component_id, _context.env) %}
+{% set componentName = tfm__get_k8s_component_info(_context.vdb, _context.component_id) %}
+{% set clusterSchema = tfm__find_best_cluster_for_deploy(_context.vdb, _context.component_id, _context.env) %}
 {% set selectorUUID = uuid() %}
 ---
 
@@ -32,7 +32,7 @@ before:
         value: {{ env }}
         operation: "EQUAL"
     assertThat: does_not_exist
-    message: "Deployment {{ componentName }} of Application {{ app_id }} environment {{ env }} already exists."
+    message: "Deployment of {{ component_id }} already exists for environment {{ env }}."
 
 # ********* OPERATIONS *********
 
@@ -41,8 +41,8 @@ operations:
   - name: "namespace_insert"
     type: "insert"
     virtualDatabase: {{ vdb }}
-    entity: "{{ clusterSchema }}.NAMESPACE"
-    skipWhenTrue: {{ ns_exists(_context.vdb, _context.clusterSchema, _context.component_id) }}
+    entity: "{{ _context.clusterSchema }}.NAMESPACE"
+    skipWhenTrue: {{ tfm.ns_exists(_context.vdb, _context.clusterSchema, _context.component_id) }}
     valueAssignments:
       - field: "metadata__name"
         value: "{{ component_id }}"
@@ -59,16 +59,14 @@ operations:
   - name: "deployment_insert"
     type: "insert"
     virtualDatabase: {{ vdb }}
-    entity: "{{ clusterSchema }}.DEPLOYMENT"
+    entity: "{{ _context.clusterSchema }}.DEPLOYMENT"
     valueAssignments:
 # We marked identifier as NOT NULL, therefore the engine will reject an operation if it is not present, even if it is
 # a calculated field. Here we just assign a random value.
-      - field: "identifier"
-        value: "xxx"
       - field: "metadata__namespace"
         value: "{{ component_id }}"
       - field: "metadata__name"
-        value: "{{ componentName }}"
+        value: "{{ _context.componentName }}"
       - field: "spec__template__metadata__labels"
         dataType: "json"
         value:
