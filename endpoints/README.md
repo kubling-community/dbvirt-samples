@@ -48,7 +48,7 @@ docker run --rm \
     -e DESCRIPTOR_BUNDLE=/dbvirt-samples/endpoints/endpoints-descriptor-bundle.zip \
     -e APP_CONFIG=/dbvirt-samples/endpoints/app-config.yaml \
     -e PROPS_FILE=/dbvirt-samples/endpoints/env.properties \
-    -p 35432:35432 -p 8282:8282 \
+    -p 35432:35432 -p 35482:35482 -p 8282:8282 \
     -v ~/dbvirt-samples:/dbvirt-samples \
     kubling/dbvirt-ce:latest
 ```

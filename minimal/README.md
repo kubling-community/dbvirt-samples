@@ -29,7 +29,7 @@ docker run --rm \
     -e DESCRIPTOR_BUNDLE=[/path/to/minimal-descriptor-bundle.zip] \
     -e APP_CONFIG=[/path/to/app-config.yaml] \
     -e MODULE_BUNDLE=[/path/to/main-module-bundle.zip] \
-    -p 35432:35432 -p 8282:8282 \
+    -p 35432:35432 -p 35482:35482 -p 8282:8282 \
     -v [/path/to/dbvirt-samples]:[mount/path] \
     kubling/dbvirt-ce:latest
 ```
@@ -40,7 +40,7 @@ docker run --rm \
     -e DESCRIPTOR_BUNDLE=/dbvirt-samples/minimal/minimal-descriptor-bundle.zip \
     -e APP_CONFIG=/dbvirt-samples/minimal/app-config.yaml \
     -e MODULE_BUNDLE=/dbvirt-samples/minimal/modules/main-module-bundle.zip \
-    -p 35432:35432 -p 8282:8282 \
+    -p 35432:35432 -p 35482:35482 -p 8282:8282 \
     -v ~/dbvirt-samples:/dbvirt-samples \
     kubling/dbvirt-ce:latest
 ```

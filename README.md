@@ -13,7 +13,7 @@ Assuming that you cloned the repo in `~/dbvirt-samples`, just run:
 ```
 docker run --rm \ 
     -e ENABLE_WEB_CONSOLE=true \ 
-    -p 35432:35432 -p 8282:8282 \
+    -p 35432:35432 -p 35482:35482 -p 8282:8282 \
     -e DESCRIPTOR_BUNDLE=/dbvirt-samples/empty/empty-descriptor-bundle.zip \
     -e APP_CONFIG=/dbvirt-samples/empty/app-config.yaml \ 
     kubling/dbvirt-ce:latest

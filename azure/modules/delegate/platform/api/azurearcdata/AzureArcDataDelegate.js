@@ -18,7 +18,7 @@ export function handleAzureArcDataQuery() {
         let qFilter = JSON.parse(queryFilter.json);
         const rg = qFilter.filters.filter((f) => f.field === "resourceGroup" && f.operation == "EQUAL");
         if (isArrayEmpty(rg))
-            throw new Error("Resrouce group is required.");
+            throw new Error("Resource group is required.");
 
         var serversApi = new SqlManagedInstancesApi(client);
         serversApi.sqlManagedInstancesListByResourceGroup(contextVars.AZ_SUBSCRIPTION_ID, rg[0].value, "2023-01-15-preview",

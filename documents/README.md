@@ -148,7 +148,7 @@ docker run --rm \
     -e MODULE_BUNDLE=[/path/to/documents-module-bundle.zip] \
     -e APP_CONFIG=[/path/to/app-config.yaml] \
     -e PROPS_FILE=[/path/to/env.properties] \
-    -p 35432:35432 -p 8282:8282 \
+    -p 35432:35432 -p 35482:35482 -p 8282:8282 \
     -v [/path/to/dbvirt-samples]:[mount/path] \
     kubling/dbvirt-ce:latest
 ```
@@ -160,7 +160,7 @@ docker run --rm \
     -e MODULE_BUNDLE=/dbvirt-samples/documents/modules/documents-module-bundle.zip \
     -e APP_CONFIG=/dbvirt-samples/documents/app-config.yaml \
     -e PROPS_FILE=/dbvirt-samples/documents/env.properties \
-    -p 35432:35432 -p 8282:8282 \
+    -p 35432:35432 -p 35482:35482 -p 8282:8282 \
     -v ~/dbvirt-samples:/dbvirt-samples \
     kubling/dbvirt-ce:latest
 ```

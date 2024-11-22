@@ -28,7 +28,7 @@ docker run --rm \
     -e DESCRIPTOR_BUNDLE=[/path/to/rbac-descriptor-bundle.zip] \
     -e APP_CONFIG=[/path/to/app-config.yaml] \
     -e MODULE_BUNDLE=[/path/to/main-module-bundle.zip] \
-    -p 35432:35432 -p 8282:8282 \
+    -p 35432:35432 -p 35482:35482 -p 8282:8282 \
     -v [/path/to/dbvirt-samples]:[mount/path] \
     kubling/dbvirt-ce:latest
 ```
@@ -39,7 +39,7 @@ docker run --rm \
     -e DESCRIPTOR_BUNDLE=/dbvirt-samples/initializer/initializer-descriptor-bundle.zip \
     -e APP_CONFIG=/dbvirt-samples/initializer/app-config.yaml \
     -e MODULE_BUNDLE=/dbvirt-samples/initializer/modules/tokenbased-module-bundle.zip \
-    -p 35432:35432 -p 8282:8282 \
+    -p 35432:35432 -p 35482:35482 -p 8282:8282 \
     -v ~/dbvirt-samples:/dbvirt-samples \
     kubling/dbvirt-ce:latest
 ```

@@ -98,7 +98,7 @@ docker run --rm \
     -e MODULE_BUNDLE=[/path/to/azure-module-bundle.zip] \
     -e SQL_FUNCTIONS_BUNDLE=[/path/to/azure-sql-fn-parser-bundle.zip] \
     -e PROPS_FILE=[/path/to/azure.properties] \
-    -p 35432:35432 -p 8282:8282 \
+    -p 35432:35432 -p 35482:35482 -p 8282:8282 \
     -v [/path/to/dbvirt-samples]:[mount/path] \
     kubling/dbvirt-ce:latest
 ```
@@ -111,7 +111,7 @@ docker run --rm \
     -e MODULE_BUNDLE=/dbvirt-samples/azure/modules/azure-module-bundle.zip \
     -e SQL_FUNCTIONS_BUNDLE=/dbvirt-samples/azure/modules/azure-sql-fn-parser-bundle.zip \
     -e PROPS_FILE=/dbvirt-samples/azure/azure.properties \
-    -p 35432:35432 -p 8282:8282 \
+    -p 35432:35432 -p 35482:35482 -p 8282:8282 \
     -v ~/dbvirt-samples:/dbvirt-samples \
     kubling/dbvirt-ce:latest
 ```
