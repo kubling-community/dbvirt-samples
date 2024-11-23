@@ -19,7 +19,7 @@ you to write and execute integration tests in a declarative way (as shown below)
 ## Distribution
 For local dev environment we recommend using the binary file whose distribution channel is still under development.
 
-In pipelines, workflows or in case you prefer using containers, you can [find them here](https://hub.docker.com/r/kubling/dbvirt-cli/tags).
+In pipelines, workflows or in case you prefer using containers, you can [find them here](https://hub.docker.com/r/kubling/kubling-cli/tags).
 
 ## Commands
 

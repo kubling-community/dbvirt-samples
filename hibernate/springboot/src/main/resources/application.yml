@@ -46,6 +46,6 @@ spring:
     activate:
       on-profile: unit-test
   datasource:
-    url: jdbc:teiid:App@mm://localhost:35482
+    url: jdbc:teiid:MinimalVDB@mms://localhost:35482;connectionPropsFilePath=/home/isoubelet/Kubling/dbvirt-samples/hibernate/springboot/src/main/resources/client-settings.properties
     username: sa
     password: sa

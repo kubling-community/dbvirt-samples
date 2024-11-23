@@ -100,7 +100,7 @@ docker run --rm \
     -e PROPS_FILE=[/path/to/azure.properties] \
     -p 35432:35432 -p 35482:35482 -p 8282:8282 \
     -v [/path/to/dbvirt-samples]:[mount/path] \
-    kubling/dbvirt-ce:latest
+    kubling/kubling-ce:latest
 ```
 
 Or, assuming that you cloned the repo in `~/dbvirt-samples`, just run:
@@ -113,7 +113,7 @@ docker run --rm \
     -e PROPS_FILE=/dbvirt-samples/azure/azure.properties \
     -p 35432:35432 -p 35482:35482 -p 8282:8282 \
     -v ~/dbvirt-samples:/dbvirt-samples \
-    kubling/dbvirt-ce:latest
+    kubling/kubling-ce:latest
 ```
 
 ### 4. Queries

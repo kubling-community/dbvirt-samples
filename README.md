@@ -16,7 +16,7 @@ docker run --rm \
     -p 35432:35432 -p 35482:35482 -p 8282:8282 \
     -e DESCRIPTOR_BUNDLE=/dbvirt-samples/empty/empty-descriptor-bundle.zip \
     -e APP_CONFIG=/dbvirt-samples/empty/app-config.yaml \ 
-    kubling/dbvirt-ce:latest
+    kubling/kubling-ce:latest
 ```
 
 Then open your browser and go to `http://localhost:8282/console`
@@ -77,12 +77,12 @@ By default, `DBVirt` does not print out any internal log message to the console,
 In case you need to add debug messages, just `print("My debug message");` from any script and get container's logs printed in the `stdout`.
 
 ## `kdv` CLI tool
-`kdv` is released as a native executable (still in progress) and as a [OCI image published in DockerHub](https://hub.docker.com/r/kubling/dbvirt-cli/tags).<br>
+`kdv` is released as a native executable (still in progress) and as a [OCI image published in DockerHub](https://hub.docker.com/r/kubling/kubling-cli/tags).<br>
 Usage:
-`docker run --rm -v [path/of/your/project]:[path/in/container] kubling/dbvirt-cli:latest [command] [subcommand] [params] [options]`
+`docker run --rm -v [path/of/your/project]:[path/in/container] kubling/kubling-cli:latest [command] [subcommand] [params] [options]`
 
 Example:
-`docker run --rm -v /root/dbvirt-samples/:/dbvirt-samples/ kubling/dbvirt-cli:latest bundle genmod /dbvirt-samples/azure/modules/delegate -o /dbvirt-samples/azure/modules/delegate/azure-module-bundle.zip`
+`docker run --rm -v /root/dbvirt-samples/:/dbvirt-samples/ kubling/kubling-cli:latest bundle genmod /dbvirt-samples/azure/modules/delegate -o /dbvirt-samples/azure/modules/delegate/azure-module-bundle.zip`
 
 For more information about available commands please [see this doc](docs/KDV.MD).
 

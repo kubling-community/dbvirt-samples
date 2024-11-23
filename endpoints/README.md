@@ -39,7 +39,7 @@ docker run --rm \
     -e PROPS_FILE=[/path/to/env.properties] \
     -p 35432:35432 -p 8282:8282 \
     -v [/path/to/dbvirt-samples]:[mount/path] \
-    kubling/dbvirt-ce:latest
+    kubling/kubling-ce:latest
 ```
 
 Or, assuming that you cloned the repo in `~/dbvirt-samples`, just run:
@@ -50,7 +50,7 @@ docker run --rm \
     -e PROPS_FILE=/dbvirt-samples/endpoints/env.properties \
     -p 35432:35432 -p 35482:35482 -p 8282:8282 \
     -v ~/dbvirt-samples:/dbvirt-samples \
-    kubling/dbvirt-ce:latest
+    kubling/kubling-ce:latest
 ```
 
 ### 5. Endpoints
