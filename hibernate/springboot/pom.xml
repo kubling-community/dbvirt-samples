@@ -32,12 +32,12 @@
         <dependency>
             <groupId>com.kubling</groupId>
             <artifactId>kubling-client</artifactId>
-            <version>24.2.3</version>
+            <version>24.2.6</version>
         </dependency>
         <dependency>
             <groupId>com.kubling</groupId>
             <artifactId>kubling-hibernate-dialect</artifactId>
-            <version>24.2.0</version>
+            <version>24.2.6</version>
         </dependency>
 
         <dependency>
@@ -89,6 +89,19 @@
             <groupId>io.fabric8</groupId>
             <artifactId>kubernetes-model-apps</artifactId>
             <version>6.13.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.kubling</groupId>
+            <artifactId>kubling-test-container</artifactId>
+            <version>24.2.6</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>k3s</artifactId>
+            <version>1.20.4</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
