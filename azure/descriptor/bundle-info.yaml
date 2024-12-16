@@ -3,5 +3,3 @@ virtualDatabases:
 sqlFunctionModules:
    - name: "az_func"
      zipFilePath: "{{ SQL_FUNCTIONS_BUNDLE }}"
-   - name: "remote_func"
-     zipFilePath: "/home/isoubelet/Kubling/kubling-dbvirt/vdb/minimal/minimal-repo-functions-bundle.zip"
