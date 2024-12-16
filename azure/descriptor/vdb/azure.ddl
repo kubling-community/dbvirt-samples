@@ -1,7 +1,7 @@
 CREATE FOREIGN TABLE STORAGE_ACCOUNT
    (
         subscription string OPTIONS(val_constant '{{ schema.properties.azure_subscription }}'),
-        resourceGroup string OPTIONS(call_func 'az_sql_get_rg<id>'),
+        resourceGroup string OPTIONS(call_func 'az_ddl_get_rg<id>'),
         sku json OPTIONS(parser_format 'asJsonPretty'),
         kind string,
         "identity" string,
@@ -48,7 +48,7 @@ CREATE FOREIGN TABLE STORAGE_ACCOUNT_PROPERTIES
 CREATE FOREIGN TABLE PSQL_SERVER
    (
         subscription string OPTIONS(val_constant '{{ schema.properties.azure_subscription }}'),
-        resourceGroup string OPTIONS(call_func 'az_sql_get_rg<id>'),
+        resourceGroup string OPTIONS(call_func 'az_ddl_get_rg<id>'),
         sku json OPTIONS(parser_format 'asJsonPretty'),
         "identity" string,
         properties json OPTIONS(parser_format 'asJsonPretty'),
@@ -67,7 +67,7 @@ CREATE FOREIGN TABLE PSQL_SERVER
 CREATE FOREIGN TABLE CONTAINER_REGISTRY
    (
         subscription string OPTIONS(val_constant '{{ schema.properties.azure_subscription }}'),
-        resourceGroup string OPTIONS(call_func 'az_sql_get_rg<id>'),
+        resourceGroup string OPTIONS(call_func 'az_ddl_get_rg<id>'),
         sku json OPTIONS(parser_format 'asJsonPretty'),
         "identity" string,
         properties json OPTIONS(parser_format 'asJsonPretty'),
