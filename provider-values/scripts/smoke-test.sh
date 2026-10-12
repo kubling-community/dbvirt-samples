@@ -45,6 +45,13 @@ assert_contains "${structured}" '"timestamp_value":"2026-08-03 14:30:15.125"' "t
 assert_contains "${structured}" '"engine":"kubling"' "JSON object is missing its engine field"
 assert_contains "${structured}" '"sample":true' "JSON object is missing its sample field"
 
+expanded_json="$(execute_sql "SELECT p.sample_id, j.engine_name, j.is_sample FROM provider.TYPE_SAMPLE AS p, JSONTABLE(p.json_value, '$', false COLUMNS engine_name string PATH '@.engine', is_sample boolean PATH '@.sample') AS j")"
+assert_contains "${expanded_json}" '"containsRows":true' "JSONTABLE query returned no rows"
+assert_contains "${expanded_json}" '"sample_id":"canonical"' "JSONTABLE lost the source row identity"
+assert_contains "${expanded_json}" '"engine_name":"kubling"' "JSONTABLE did not extract the engine field"
+assert_contains "${expanded_json}" '"name":"is_sample","type":"boolean"' "JSONTABLE did not declare the boolean result type"
+assert_contains "${expanded_json}" '"is_sample":"true"' "JSONTABLE did not extract the boolean field"
+
 lob_and_spatial="$(execute_sql "SELECT TO_CHARS(blob_value, 'UTF-8') AS blob_text, clob_value, ST_AsText(geometry_value) AS geometry_wkt, ST_SRID(geometry_value) AS geometry_srid, geography_value FROM provider.TYPE_SAMPLE")"
 assert_contains "${lob_and_spatial}" '"blob_text":"binary large object"' "BLOB content was not read"
 assert_contains "${lob_and_spatial}" '"clob_value":"character large object"' "CLOB content was not read"

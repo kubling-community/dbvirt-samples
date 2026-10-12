@@ -30,7 +30,7 @@ Each directory answers a specific question:
 | Sample | What to explore |
 |:--|:--|
 | [Quickstart](quickstart/README.md) | How Kubling registers a gRPC provider, imports its schema, queries deterministic data, and executes a mutation |
-| [Provider values](provider-values/README.md) | How provider capability negotiation preserves arrays, precision, spatial values, and streamed LOBs |
+| [Provider values](provider-values/README.md) | How provider capability negotiation preserves arrays, precision, spatial values, streamed LOBs, and JSON that can be expanded into typed rows |
 | [Provider aggregate pushdown](provider-aggregates/README.md) | How grouped SQL is delegated according to provider capabilities and verified at the provider boundary |
 | [Endpoints](endpoints/README.md) | How query endpoints and actions expose reusable operations over provider data |
 | [RBAC](rbac/README.md) | How authentication sources, external-role mappings, and VDB data roles control access |

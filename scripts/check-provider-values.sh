@@ -56,6 +56,7 @@ grep -Fq 'name: "ProviderValuesVDB"' "${vdb_file}"
 grep -Fq 'name: "provider"' "${vdb_file}"
 grep -Fq 'dataSourceType: "PROVIDER_GRPC"' "${vdb_file}"
 grep -Fq 'provider.TYPE_SAMPLE' provider-values/scripts/smoke-test.sh
+grep -Fq 'JSONTABLE(p.json_value' provider-values/scripts/smoke-test.sh
 
 if grep -Eiq '^[[:space:]]*ddl(FilePaths)?[[:space:]]*:' "${vdb_file}"; then
   printf 'ERROR: Provider Values VDB must import its physical schema from GetSchema.\n' >&2
