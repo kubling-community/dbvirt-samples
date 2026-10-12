@@ -1,6 +1,6 @@
 # Provider Values Sample
 
-This sample shows how Kubling negotiates typed values with a gRPC provider and preserves structured, high-precision, spatial, and large-object values across the provider boundary.
+This sample shows how Kubling negotiates typed values with a gRPC provider and preserves structured, high-precision, spatial, and large-object values across the provider boundary. It also expands the provider's JSON value into typed relational columns with the packaged `JSONTABLE` function.
 
 The official In-memory provider publishes its value contract through `GetCapabilities`. It declares every concrete provider value type for input and output and enables:
 
@@ -99,6 +99,33 @@ Expected values include:
 | `geometry_srid` | `4326` |
 
 For BLOB and CLOB columns, the provider returns a scoped, expiring LOB reference. Kubling reads the referenced chunks through `ReadLob` and exposes the complete SQL value to the query. The geography column exercises the corresponding CRS-aware binary value; the automated test verifies its exact WKB payload.
+
+## Expand provider JSON into typed rows
+
+`JSONTABLE` is included in the Kubling runtime; this sample does not install an
+extra module. Use the JSON value returned by the provider as a nested table
+reference:
+
+```sql
+SELECT p.sample_id, j.engine_name, j.is_sample
+FROM provider.TYPE_SAMPLE AS p,
+     JSONTABLE(
+       p.json_value,
+       '$',
+       false COLUMNS
+         engine_name string PATH '@.engine',
+         is_sample boolean PATH '@.sample'
+     ) AS j;
+```
+
+Expected result:
+
+| sample_id | engine_name | is_sample |
+|:--|:--|:--|
+| `canonical` | `kubling` | `true` |
+
+This verifies both halves of the flow: the provider transports a typed JSON
+value, then the engine turns that value into typed relational columns.
 
 ## Automated verification
 
